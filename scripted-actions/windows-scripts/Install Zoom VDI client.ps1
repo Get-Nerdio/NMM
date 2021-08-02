@@ -1,4 +1,4 @@
-#description: Downloads and installs Zoom VDI client for WVD. Reference https://support.zoom.us/hc/en-us/articles/360052984292 (under "Windows Virtual Desktop") for more information
+#description: Downloads and installs Zoom VDI client for WVD. Reference https://support.zoom.us/hc/en-us/articles/360052984292
 #execution mode: IndividualWithRestart
 #tags: Nerdio, Apps install
 <# 
