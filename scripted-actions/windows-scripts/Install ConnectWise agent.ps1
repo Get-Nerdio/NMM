@@ -12,14 +12,30 @@ agent. This comparison is based on the server's FQDN.
 You must provide secure variables to this script as seen in the Required Variables section. 
 Set these up in NMW under Settings->Nerdio Integrations. The variables to create are:
     AutomateServerUrl
-    AutomateServerToken   
+    AutomateServerToken or SystemPassword
 #>
 
-##### Required Variables #####
+##### Secure Variables #####
 
 $Server = $SecureVars.AutomateServerUrl
 $Token = $SecureVars.AutomateServerToken
+$Password = $SecureVars.SystemPassword 
+
+##### Variables #####
+
+#Set LocationID to install the Automate Agent directly to the appropieate client's location / site.
+$LocationId = 1
 
 ##### Script Logic #####
 
-[Net.ServicePointManager]::SecurityProtocol = [Enum]::ToObject([Net.SecurityProtocolType], 3072); Invoke-Expression(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/Get-Nerdio/NMM/main/scripted-actions/modules/CMSP_Automate-Module.psm1'); Install-Automate -Server $Server -LocationID  -Token $Token -Transcript
+if(($Token -eq $null) -and  ($Password -eq $null)) {
+Write-Output "ERROR: The secure variables AutomateServerToken or SystemPassword are not provided"
+}
+
+elseif ($Password) {
+[Net.ServicePointManager]::SecurityProtocol = [Enum]::ToObject([Net.SecurityProtocolType], 3072); Invoke-Expression(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/Get-Nerdio/NMM/main/scripted-actions/modules/CMSP_Automate-Module.psm1'); Install-Automate -Server $Server -LocationID $LocationId -SystemPassword $Password -Transcript
+}
+
+elseif ($Token) {
+[Net.ServicePointManager]::SecurityProtocol = [Enum]::ToObject([Net.SecurityProtocolType], 3072); Invoke-Expression(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/Get-Nerdio/NMM/main/scripted-actions/modules/CMSP_Automate-Module.psm1'); Install-Automate -Server $Server -LocationID $LocationId -Token $Token -Transcript
+}
