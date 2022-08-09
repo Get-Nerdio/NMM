@@ -1,6 +1,6 @@
 #description: Install the Huntress agent.
 #execution mode: Individual
-#tags: Nerdio, Huntress
+#tags: Nerdio, Huntress, Preview
 
 <#
 Notes:
