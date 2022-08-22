@@ -10,7 +10,7 @@ Automate server, it will automatically uninstall the existing
 agent. This comparison is based on the server's FQDN. 
 
 You must provide secure variables to this script as seen in the Required Variables section. 
-Set these up in NMW under Settings->Nerdio Integrations. The variables to create are:
+Set these up in Nerdio Manager under Settings->Nerdio Integrations. The variables to create are:
     AutomateServerUrl
     AutomateServerToken or SystemPassword
 #>

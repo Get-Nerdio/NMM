@@ -20,7 +20,7 @@ Write-Host "################# New Script Run #################"
 Write-host "Current time (UTC-0): $LogTime"
   
 try {
-    # Pass in secure variables from NMW
+    # Pass in secure variables from Nerdio Manager
     Write-host "Setting variables"
     $auth = $SecureVars.sophosauth
     $apikey = $SecureVars.sophosapikey
@@ -49,7 +49,7 @@ elseif(!$sophosClientSecret){
     Write-Error "ERROR: Required variables for authentication to Sophos not available. Please see documentation for this scripted action" -ErrorAction Stop
 }
 elseif(!$locationsApi){
-    Write-Output "WARN: Required variable sophoslocationsapi is not being passed from NMW. Please add it to secure variable. Attempting with api1.central.sophos. . ." -ErrorAction Continue
+    Write-Output "WARN: Required variable sophoslocationsapi is not being passed from Nerdio Manager. Please add it to secure variable. Attempting with api1.central.sophos. . ." -ErrorAction Continue
     $locationsApi = "https://api1.central.sophos.com/gateway/migration-tool/v1/deployment/agent/locations"
 }
 
