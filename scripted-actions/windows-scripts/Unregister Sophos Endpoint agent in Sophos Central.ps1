@@ -21,7 +21,7 @@ Start-Transcript -Path "C:\Windows\temp\NMWLogs\ScriptedActions\sophosunregister
 Write-Host "################# New Script Run #################"
 Write-host "Current time (UTC-0): $LogTime"
 
-# Pass in secure variables from NMW
+# Pass in secure variables from Nerdio Manager
 $ClientID     = $SecureVars.sophosclientid
 $ClientSecret = $SecureVars.sophosclientsecret
 $TenantID     = $SecureVars.sophostenantid
@@ -29,7 +29,7 @@ $APIHost      = $SecureVars.sophosapihost
 
 # Error out if required secure variables are not passed
 if(!$ClientID -or !$ClientSecret){
-    Write-Error "ERROR: Required variables sophosclientiD and/or sophosclientSecret are not being passed from NMW. Please add these secure variables" -ErrorAction Stop
+    Write-Error "ERROR: Required variables sophosclientiD and/or sophosclientSecret are not being passed from Nerdio Manager. Please add these secure variables" -ErrorAction Stop
 
 }
 
