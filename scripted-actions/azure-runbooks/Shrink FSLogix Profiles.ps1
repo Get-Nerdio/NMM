@@ -7,7 +7,7 @@ This script creates a temporary VM and then runs FSLogix-ShrinkDisk.ps1 to reduc
 After completing, the temporary VM is deleted.
 
 You must provide seven secure variables to this script as seen in the Required Variables section. 
-Set these up in NMW under Settings->Nerdio Integrations. The variables to create are:
+Set these up in Nerdio Manager under Settings->Nerdio Integrations. The variables to create are:
   FslResourceGroup - the resource group in which the temp vm will be created
   FslRegion - the region in which the temp vm will be created
   FslTempVmVnet - the vnet in which the temp vm will be created
@@ -53,8 +53,8 @@ $vmAdminPassword = ConvertTo-SecureString "LocalAdminP@sswordHere" -AsPlainText 
 $vmComputerName = "fslshrink-tmp"
  
 #Define the following parameters for the Azure resources.
-$azureLocation = $AzureRegionName #passed as NMW Scripted Actions variable
-$azureResourceGroup = $AzureResourceGroupName #passed as NMW Scripted Actions variable
+$azureLocation = $AzureRegionName #passed as Nerdio Manager Scripted Actions variable
+$azureResourceGroup = $AzureResourceGroupName #passed as Nerdio Manager Scripted Actions variable
 $azureVmOsDiskName = "$AzureVMName-os"
  
 #Define the networking information.
