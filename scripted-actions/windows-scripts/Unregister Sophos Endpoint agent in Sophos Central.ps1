@@ -3,8 +3,7 @@
 <#
 Notes:
 IMPORTANT: Refer to the Sophos Integration Article for instructions on how to use this script!
-https://nmw.zendesk.com/hc/en-us/articles/1500004124602
-
+https://help.nerdio.net
 This script uses the Sophos API to delete the associated VM from Sophos Central.
 Please refer to sophos documentation for more information:
 https://developer.sophos.com/intro

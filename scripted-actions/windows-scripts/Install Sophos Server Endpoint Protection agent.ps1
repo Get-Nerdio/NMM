@@ -4,7 +4,7 @@
 <#
 Notes:
 IMPORTANT: Refer to the Sophos Integration Article for instructions on how to use this script!
-https://nmw.zendesk.com/hc/en-us/articles/1500004124602
+https://help.nerdio.net
 
 This script installs Sophos Server Protection Endpoint software components. 
 #>
