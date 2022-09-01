@@ -8,7 +8,7 @@ This script performs the following:
 2. Uninstall MSTeams and WebRTC program
 3. Downloads and Installs latest version of MS Teams machine-wide (Not per-user)
 4. Downloads and Installs latest version of WebRTC component
-5. Sends logs to C:Windows\temp\NMWLogs\ScriptedActions\msteams
+5. Sends logs to C:Windows\temp\NerdioManagerLogs\ScriptedActions\msteams
 #>
 
 # Start powershell logging
@@ -16,8 +16,8 @@ $SaveVerbosePreference = $VerbosePreference
 $VerbosePreference = 'continue'
 $VMTime = Get-Date
 $LogTime = $VMTime.ToUniversalTime()
-mkdir "C:\Windows\temp\NMWLogs\ScriptedActions\msteams" -Force
-Start-Transcript -Path "C:\Windows\temp\NMWLogs\ScriptedActions\msteams\ps_log.txt" -Append
+mkdir "C:\Windows\temp\NerdioManagerLogs\ScriptedActions\msteams" -Force
+Start-Transcript -Path "C:\Windows\temp\NerdioManagerLogs\ScriptedActions\msteams\ps_log.txt" -Append
 Write-Host "################# New Script Run #################"
 Write-host "Current time (UTC-0): $LogTime"
 

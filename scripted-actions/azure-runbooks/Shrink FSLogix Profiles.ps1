@@ -7,7 +7,7 @@ This script creates a temporary VM and then runs FSLogix-ShrinkDisk.ps1 to reduc
 After completing, the temporary VM is deleted.
 
 You must provide seven secure variables to this script as seen in the Required Variables section. 
-Set these up in Nerdio Manager under Settings->Nerdio Integrations. The variables to create are:
+Set these up in Nerdio Manager under Settings->Portal. The variables to create are:
   FslResourceGroup - the resource group in which the temp vm will be created
   FslRegion - the region in which the temp vm will be created
   FslTempVmVnet - the vnet in which the temp vm will be created

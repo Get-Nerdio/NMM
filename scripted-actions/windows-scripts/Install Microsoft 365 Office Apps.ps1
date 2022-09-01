@@ -21,8 +21,8 @@ $SaveVerbosePreference = $VerbosePreference
 $VerbosePreference = 'continue'
 $VMTime = Get-Date
 $LogTime = $VMTime.ToUniversalTime()
-mkdir "$env:windir\Temp\NMWLogs\ScriptedActions\msoffice_sa" -Force
-Start-Transcript -Path "$env:windir\Temp\NMWLogs\ScriptedActions\msoffice_sa\ps_log.txt" -Append -IncludeInvocationHeader
+mkdir "$env:windir\Temp\NerdioManagerLogs\ScriptedActions\msoffice_sa" -Force
+Start-Transcript -Path "$env:windir\Temp\NerdioManagerLogs\ScriptedActions\msoffice_sa\ps_log.txt" -Append -IncludeInvocationHeader
 Write-Host "################# New Script Run #################"
 Write-host "Current time (UTC-0): $LogTime"
 
