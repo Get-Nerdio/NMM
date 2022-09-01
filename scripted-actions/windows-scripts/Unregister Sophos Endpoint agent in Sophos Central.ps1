@@ -3,8 +3,7 @@
 <#
 Notes:
 IMPORTANT: Refer to the Sophos Integration Article for instructions on how to use this script!
-https://nmw.zendesk.com/hc/en-us/articles/1500004124602
-
+https://help.nerdio.net
 This script uses the Sophos API to delete the associated VM from Sophos Central.
 Please refer to sophos documentation for more information:
 https://developer.sophos.com/intro
@@ -16,12 +15,12 @@ $SaveVerbosePreference = $VerbosePreference
 $VerbosePreference = 'continue'
 $VMTime = Get-Date
 $LogTime = $VMTime.ToUniversalTime()
-mkdir "C:\Windows\temp\NMWLogs\ScriptedActions\sophosunregister" -Force
-Start-Transcript -Path "C:\Windows\temp\NMWLogs\ScriptedActions\sophosunregister\ps_log.txt" -Append
+mkdir "C:\Windows\temp\NerdioManagerLogs\ScriptedActions\sophosunregister" -Force
+Start-Transcript -Path "C:\Windows\temp\NerdioManagerLogs\ScriptedActions\sophosunregister\ps_log.txt" -Append
 Write-Host "################# New Script Run #################"
 Write-host "Current time (UTC-0): $LogTime"
 
-# Pass in secure variables from NMW
+# Pass in secure variables from Nerdio Manager
 $ClientID     = $SecureVars.sophosclientid
 $ClientSecret = $SecureVars.sophosclientsecret
 $TenantID     = $SecureVars.sophostenantid
@@ -29,7 +28,7 @@ $APIHost      = $SecureVars.sophosapihost
 
 # Error out if required secure variables are not passed
 if(!$ClientID -or !$ClientSecret){
-    Write-Error "ERROR: Required variables sophosclientiD and/or sophosclientSecret are not being passed from NMW. Please add these secure variables" -ErrorAction Stop
+    Write-Error "ERROR: Required variables sophosclientiD and/or sophosclientSecret are not being passed from Nerdio Manager. Please add these secure variables" -ErrorAction Stop
 
 }
 

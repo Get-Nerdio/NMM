@@ -20,25 +20,25 @@ this script will NOT account for them.
 # Get all storage accounts
 $SAList = Get-AzStorageAccount | Select-Object *
 
-# Sort through storage accounts for ones with NMW Tags
-$SANMWList = @()
+# Sort through storage accounts for ones with Nerdio Manager Tags
+$SANerdioList = @()
 foreach ($SA in $SAList){
     $SATag = $SA.Tags
     if($SATag.Values -match "FILE_STORAGE_ACCOUNT"){
-        $SANMWList += $SA
+        $SANerdioList += $SA
     }
 }
 
 
 # Parse through refined storage account list
 $SAHandlelist = @()
-foreach ($SANMW in $SANMWList) {
+foreach ($SANerdio in $SANerdioList) {
     # Get storage account key, and set context for storage account
-    $SAKey = Get-AzStorageAccountkey -ResourceGroupName $SANMW.ResourceGroupName -Name $SANMW.StorageAccountName
-    $SAContext = New-AzStorageContext -StorageAccountName $SANMW.StorageAccountName -StorageAccountKey $SAKey.value[0]
-    $SANMWShare = Get-AzStorageShare -Context $SAContext
+    $SAKey = Get-AzStorageAccountkey -ResourceGroupName $SANerdio.ResourceGroupName -Name $SANerdio.StorageAccountName
+    $SAContext = New-AzStorageContext -StorageAccountName $SANerdio.StorageAccountName -StorageAccountKey $SAKey.value[0]
+    $SANerdioShare = Get-AzStorageShare -Context $SAContext
     # Iterate through each share to get all handles and store in $SAHandleList
-    foreach ($SAShare in $SANMWShare) {
+    foreach ($SAShare in $SANerdioShare) {
         $SAHandle = Get-AzStorageFileHandle -ShareName $SAShare.Name -Recursive -context $SAContext | Sort-Object ClientIP,OpenTime,Path
         $SAHandlelist += $SAHandle
     }

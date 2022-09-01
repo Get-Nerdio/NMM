@@ -4,7 +4,7 @@
 <#
 Notes:
 IMPORTANT: Refer to the Sophos Integration Article for instructions on how to use this script!
-https://nmw.zendesk.com/hc/en-us/articles/1500004124602
+https://help.nerdio.net
 
 This script installs Sophos Server Protection Endpoint software components. 
 #>
@@ -14,13 +14,13 @@ $SaveVerbosePreference = $VerbosePreference
 $VerbosePreference = 'continue'
 $VMTime  = Get-Date
 $LogTime = $VMTime.ToUniversalTime()
-mkdir "C:\Windows\temp\NMWLogs\ScriptedActions\sophosinstall" -Force
-Start-Transcript -Path "C:\windows\temp\NMWLogs\ScriptedActions\sophosinstall\ps_log.txt" -Append
+mkdir "C:\Windows\temp\NerdioManagerLogs\ScriptedActions\sophosinstall" -Force
+Start-Transcript -Path "C:\windows\temp\NerdioManagerLogs\ScriptedActions\sophosinstall\ps_log.txt" -Append
 Write-Host "################# New Script Run #################"
 Write-host "Current time (UTC-0): $LogTime"
   
 try {
-    # Pass in secure variables from NMW
+    # Pass in secure variables from Nerdio Manager
     Write-host "Setting variables"
     $auth = $SecureVars.sophosauth
     $apikey = $SecureVars.sophosapikey
@@ -49,7 +49,7 @@ elseif(!$sophosClientSecret){
     Write-Error "ERROR: Required variables for authentication to Sophos not available. Please see documentation for this scripted action" -ErrorAction Stop
 }
 elseif(!$locationsApi){
-    Write-Output "WARN: Required variable sophoslocationsapi is not being passed from NMW. Please add it to secure variable. Attempting with api1.central.sophos. . ." -ErrorAction Continue
+    Write-Output "WARN: Required variable sophoslocationsapi is not being passed from Nerdio Manager. Please add it to secure variable. Attempting with api1.central.sophos. . ." -ErrorAction Continue
     $locationsApi = "https://api1.central.sophos.com/gateway/migration-tool/v1/deployment/agent/locations"
 }
 
@@ -196,7 +196,7 @@ if (!(Test-Path $tempDir)) {
     return
 }
 
-$logFile = "C:\windows\temp\NMWLogs\ScriptedActions\sophosinstall\logfile.log"
+$logFile = "C:\windows\temp\NerdioManagerLogs\ScriptedActions\sophosinstall\logfile.log"
 try {
     # first attempt to log to a file, if does not exist file will be created otherwise it will append to an existing log file
     Log "Script processing has started, logging to $logFile"
