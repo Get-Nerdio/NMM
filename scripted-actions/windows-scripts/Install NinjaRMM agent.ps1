@@ -1,6 +1,6 @@
 #description: Install the NinjaRMM agent.
 #execution mode: Individual
-#tags: Nerdio, Huntress, Preview
+#tags: Nerdio, NinjaRMM
 
 <#
 Notes:
