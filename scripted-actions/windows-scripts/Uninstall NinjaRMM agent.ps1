@@ -19,5 +19,17 @@ if($UninstallString -eq $null) {
 }
 
 else {
-    Start-Process -FilePath "$UninstallString" -ArgumentList "--mode unattended"
+    $service=Get-Service "NinjaRMMAgent" 
+    if($service)
+    {
+        Stop-Service $service -Force
+    }
+    $UninstallProcess = Start-Process -FilePath "$UninstallString" -ArgumentList "--mode unattended" -PassThru
+    $UninstallProcess.WaitForExit()
+    Start-Sleep -Seconds 60
+    $NinjaRmmFolder = $UninstallString.Replace('\uninstall.exe', "")
+    $NinjaRmmFolder = $NinjaRmmFolder.Replace('"', "")
+    if(Test-Path $NinjaRmmFolder) {
+        Remove-Item -LiteralPath  $NinjaRmmFolder -Force -Recurse
+    }
 }
