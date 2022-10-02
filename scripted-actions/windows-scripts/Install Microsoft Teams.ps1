@@ -50,14 +50,14 @@ catch  {
 # Per-Machine teams uninstall logic
 $GetTeams = get-wmiobject Win32_Product | Where-Object IdentifyingNumber -match "{731F6BAA-A986-45A4-8936-7C3AAAAA760B}"
 if ($null -ne $GetTeams){
-    Start-Process C:\Windows\System32\msiexec.exe -ArgumentList '/x "{731F6BAA-A986-45A4-8936-7C3AAAAA760B}" /qn /norestart' -Wait
+    Start-Process C:\Windows\System32\msiexec.exe -ArgumentList '/x "{731F6BAA-A986-45A4-8936-7C3AAAAA760B}" /qn /norestart' -Wait 2>&1
     Write-Host "INFO: Teams per-machine Install Found, uninstalling teams"
 }
 
 # WebRTC uninstall logic
 $GetWebRTC = get-wmiobject Win32_Product | Where-Object IdentifyingNumber -match "{FB41EDB3-4138-4240-AC09-B5A184E8F8E4}"
 if ($null -ne $GetWebRTC){
-    Start-Process C:\Windows\System32\msiexec.exe -ArgumentList '/x "{FB41EDB3-4138-4240-AC09-B5A184E8F8E4}" /qn /norestart' -Wait
+    Start-Process C:\Windows\System32\msiexec.exe -ArgumentList '/x "{FB41EDB3-4138-4240-AC09-B5A184E8F8E4}" /qn /norestart' -Wait 2>&1
     Write-Host "INFO: WebRTC Install Found, uninstalling Current version of WebRTC"
 }
 
@@ -71,7 +71,7 @@ Invoke-WebRequest -Uri $DLink -OutFile "C:\Windows\Temp\msteams_sa\install\Teams
 # use installer to install Machine-Wide
 Write-Host "INFO: Installing MS Teams"
 Start-Process C:\Windows\System32\msiexec.exe `
--ArgumentList  '/i C:\Windows\Temp\msteams_sa\install\Teams_windows_x64.msi /l*v C:\Windows\temp\NMWLogs\ScriptedActions\msteams\teams_install_log.txt ALLUSER=1 ALLUSERS=1 /qn /norestart' -Wait
+-ArgumentList  '/i C:\Windows\Temp\msteams_sa\install\Teams_windows_x64.msi /l*v C:\Windows\temp\NerdioManagerLogs\ScriptedActions\msteams\teams_install_log.txt ALLUSER=1 ALLUSERS=1 /qn /norestart' -Wait 2>&1
 
 # use MS shortcut to WebRTC install
 $dlink2 = "https://aka.ms/msrdcwebrtcsvc/msi"
@@ -82,7 +82,7 @@ Invoke-WebRequest -Uri $DLink2 -OutFile "C:\Windows\Temp\msteams_sa\install\MsRd
 # install Teams WebRTC Websocket Service
 Write-Host "INFO: Installing WebRTC component"
 Start-Process C:\Windows\System32\msiexec.exe `
--ArgumentList '/i C:\Windows\Temp\msteams_sa\install\MsRdcWebRTCSvc_x64.msi /l*v C:\Windows\temp\NMWLogs\ScriptedActions\msteams\WebRTC_install_log.txt /qn /norestart' -Wait
+-ArgumentList '/i C:\Windows\Temp\msteams_sa\install\MsRdcWebRTCSvc_x64.msi /l*v C:\Windows\temp\NerdioManagerLogs\ScriptedActions\msteams\WebRTC_install_log.txt /qn /norestart' -Wait 2>&1
 Write-Host "INFO: Finished running installers. Check C:\Windows\Temp\msteams_sa for logs on the MSI installations."
 Write-Host "INFO: All Commands Executed; script is now finished. Allow 5 minutes for teams to appear" -ForegroundColor Green
 
