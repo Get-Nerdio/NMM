@@ -74,7 +74,7 @@ $ErrorActionPreference = 'Stop'
 
 $AzureRegionName = $SecureVars.FslRegion
 $AzureVMName = "fslshrink-tempvm"
-$azureVmSize = $TempVmSize
+$azureVmSize = 'Standard_D16s_v4'
 $azureVnetName = $SecureVars.FslTempVmVnet
 $azureVnetSubnetName = $SecureVars.FslTempVmSubnet
 $AzureResourceGroup = $SecureVars.FslResourceGroup
@@ -103,6 +103,9 @@ if ($ADPassword) {
 if ($TempVmResourceGroup) {
   $azureResourceGroup = $TempVmResourceGroup
 }
+if ($TempVmSize) {
+  $azureVmSize = $TempVmSize
+}
 
 $FSLogixLogFile = "C:\Windows\Temp\FslShrinkDisk.log"
 $InvokeFslShrinkCommand = "FSLogix-ShrinkDisk.ps1 -Path $FSLogixFileShare -Recurse -LogFilePath $FSLogixLogFile $AdditionalShrinkDiskParameters -PassThru"
@@ -112,7 +115,8 @@ VNet for temp vm is $azureVnetName
 Subnet is $azureVnetSubnetName
 Path to fslogix share is $FSLogixFileShare
 User account to access share is $StorageAccountUser
-Resource Group for temp vm is $azureResourceGroup"
+Resource Group for temp vm is $azureResourceGroup
+Temp VM size is $azureVmSize"
 
 ##### Optional Variables #####
 
