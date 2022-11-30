@@ -5,6 +5,8 @@
 <#
 Notes:
 This script uninstall Threatlocker agent
+
+Disable tamper protection on portal before running uninstall script
 #>
 
 ##### Script Logic #####
