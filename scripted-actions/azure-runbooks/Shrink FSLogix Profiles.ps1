@@ -237,7 +237,10 @@ Try {
   }
 
   $job = Receive-Job -id $job.id 
-  if ($job.value.Message -like '*error*') {  
+  if ($job.value.Message -like '*No files to process*') {  
+    Write-Output "SUCCESS: No files to process" 
+  }
+  elseif ($job.value.Message -like '*error*') {  
     Write-Output "Failed. An error occurred: `n $($job.value.Message)" 
     throw $($job.value.Message)        
   }
