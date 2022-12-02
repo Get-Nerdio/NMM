@@ -6,9 +6,14 @@ Notes:
 This script creates a temporary VM and then runs FSLogix-ShrinkDisk.ps1 to reduce the size of the 
 FSLogix VHD(X) files. After completing, the temporary VM is deleted.
 
+This script should be run directly from the Scripted Actions->Azure Runbooks screen in Nerdio manager,
+not assigned to a host pool or host. 
+
 You must provide some variables to this script to determine where the temporary VM is created, and
 how it will access the fileshare. You can provide these variables as parameters when running the
 script, or as Secure Variables created in Nerdio Manager under Settings->Nerdio Integrations. 
+If Secure Variables are specified, they will override the parameters passed at runtime. This is 
+to ensure backward compatibility with previous versions of the script.
 
 This script requires credentials to acccess the fileshare. These can be passed as AD credentials
 when running the script (check the "Pass AD credentials" box when running the script), or as 
