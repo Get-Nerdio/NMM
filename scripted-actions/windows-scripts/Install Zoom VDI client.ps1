@@ -3,8 +3,7 @@
 #tags: Nerdio, Apps install
 <# 
 Notes:
-This script installs the Zoom VDI client for use on WVD Session hosts, as well as the 
-Zoom AVD/WVD Media Plugin. 
+This script installs the Zoom VDI client for use on WVD Session hosts.
 
 To install specific versions, update the URL variables below with links to the .msi installers.
 #>
