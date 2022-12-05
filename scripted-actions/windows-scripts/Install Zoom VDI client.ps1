@@ -9,9 +9,7 @@ Zoom AVD/WVD Media Plugin.
 To install specific versions, update the URL variables below with links to the .msi installers.
 #>
 
-$ZoomClientUrl= "https://zoom.us/download/vdi/5.10.2/ZoomInstallerVDI.msi"
-$ZoomAvdPluginUrl = "https://zoom.us/download/vdi/5.10.2/ZoomWVDMediaPlugin.msi"
-
+$ZoomClientUrl= "https://zoom.us/download/vdi/5.12.6.22200/ZoomInstallerVDI.msi"
 
 # Start powershell logging
 $SaveVerbosePreference = $VerbosePreference
@@ -27,18 +25,12 @@ Write-host "Current time (UTC-0): $LogTime"
 mkdir "C:\Windows\Temp\zoom_sa\install" -Force
 
 Invoke-WebRequest -Uri $ZoomClientUrl -OutFile "C:\Windows\Temp\zoom_sa\install\ZoomInstallerVDI.msi" -UseBasicParsing
-Invoke-WebRequest -Uri $ZoomAvdPluginUrl -OutFile "C:\Windows\Temp\zoom_sa\install\ZoomAvdPluginVDI.msi" -UseBasicParsing
 
 # Install Zoom. Edit the argument list as desired for customized installs: https://support.zoom.us/hc/en-us/articles/201362163
 Write-Host "INFO: Installing Zoom client. . ."
 Start-Process C:\Windows\System32\msiexec.exe `
 -ArgumentList "/i C:\Windows\Temp\zoom_sa\install\ZoomInstallerVDI.msi /l*v C:\Windows\Temp\NerdioManagerLogs\ScriptedActions\zoom_sa\zoom_install_log.txt /qn /norestart" -Wait
 Write-Host "INFO: Zoom client install finished."
-
-Write-Host "INFO: Installing Zoom AVD Plugin. . ."
-Start-Process C:\Windows\System32\msiexec.exe `
--ArgumentList "/i C:\Windows\Temp\zoom_sa\install\ZoomAvdPluginVDI.msi /l*v C:\Windows\Temp\NerdioManagerLogs\ScriptedActions\zoom_sa\zoom_install_log.txt /qn /norestart" -Wait
-Write-Host "INFO: Zoom plugin install finished."
 
 # End Logging
 Stop-Transcript
