@@ -7,7 +7,8 @@ Notes:
 The installation script requires an Agent version, Site token and API token.
 
     Agent version: In the Management Console, click Sentinels > Packages. Copy the
-version number of the Agent to deploy.
+version number of the Agent to deploy. This is the full version number (aka the "Build
+number" e.g. 21.7.5.1080)
 
     Site token: In Sentinels > Packages, click Copy token.
 
