@@ -1,10 +1,11 @@
-#description: Install the ConnectWise Automate agent.
+#description: Install the ConnectWise AUTOMATE RMM agent.
 #execution mode: Individual
 #tags: Nerdio, ConnectWise
 
 <#
 Notes:
-This script will qualify if another Autoamte agent is already
+This script will install the CONNECTWISE AUTOMATE AGENT. 
+The script will first qualify if another Automate agent is already
 installed on the computer. If the existing agent belongs to different 
 Automate server, it will automatically uninstall the existing 
 agent. This comparison is based on the server's FQDN. 
