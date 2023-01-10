@@ -130,22 +130,34 @@ function Get-InstallerLink {
         $token = $response.access_token
         $Headers = @{Authorization = "Bearer $token"}
         $whoAmI = Invoke-RestMethod -Method Get -Uri 'https://api.central.sophos.com/whoami/v1' -Headers $Headers -UseBasicParsing
-        if(!$TenantID -and !$APIHost){
-            # Get Tenant info and APIHost/ if not specified 
-            Write-Host 'INFO: Retrieving Tenant ID and APIHost/Data Region'
-            $APIHost = $whoAmI.apihosts.dataRegion
-            $TenantID = $whoAmI.id
-        }
-        else{
-            if($whoAmI.idtype -ne "tenant"){
-                Write-host "ERROR: The API Client credentials given are not for a Sophos Tenant, and the Tenant ID and API Host values were not specified."
-                Write-Error "ERROR: The API Client credentials given are not for a Sophos Tenant, and the Tenant ID and API Host values were not specified." -ErrorAction Stop
-            }
-        }
-        $Headers += @{'X-Tenant-ID' = $TenantID
+        # Get Tenant info and APIHost/ if not specified 
+        Write-Host 'INFO: Retrieving Tenant ID and APIHost/Data Region'
+        $APIHost = $whoAmI.apihosts.dataRegion
+        $SophosID = $whoAmI.id
+        Write-Host "INFO: API host is $APIHost"
+        Write-Host "INFO: SophosId is $SophosID"
+        if ($whoAmI.idtype -eq 'tenant') {
+            $Headers += @{'X-Tenant-ID' = $SophosID
                     Accept = 'application/json'}
+        }
+        if($whoAmI.idtype -eq "partner"){
+            $SophosTenantId = $SecureVars.SophosTenantId
+            if ([string]::IsNullOrEmpty($SophosTenantId)) {
+                throw "SophosTenantId secure variable not specified in Nerdio account"
+            }
+            $Headers += @{'X-Partner-ID' = $SophosID
+                    Accept = 'application/json'}
+            $tenant = Invoke-RestMethod   "https://api.central.sophos.com/partner/v1/tenants/$SophosTenantId" -Method get -UseBasicParsing -Headers $Headers
+            $Tenant | Out-String | Write-Host
+            $APIHost = $tenant.APIHost
+            $Headers = @{Authorization = "Bearer $token"
+                         'X-Tenant-ID' = $SophosTenantId
+                         Accept = 'application/json'}
+        }
+        Write-Host "INFO: API host is $APIHost"
         $DownloadApi = "$APIHost/endpoint/v1/downloads?requestedProducts=coreAgent&requestedProducts=interceptX&requestedProducts=endpointProtection&platforms=windows"
-        $DownloadInfo = Invoke-RestMethod -Uri $DownloadApi -Method Get -Headers $Headers
+        Write-Host "INFO: Download Uri is $DownloadApi"
+        $DownloadInfo = Invoke-RestMethod -Uri $DownloadApi -Method Get -Headers $Headers -UseBasicParsing
         $DownloadInfo.installers | Where-Object type -eq server | Select-Object downloadurl -ExpandProperty downloadurl    
     }
     else{
