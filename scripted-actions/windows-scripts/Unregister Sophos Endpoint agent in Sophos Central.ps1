@@ -45,25 +45,36 @@ $AuthToken = $AuthResponse.access_token
 $AuthHeaders = @{Authorization = "Bearer $AuthToken"}
 
 $WhoAmIResponse = (Invoke-RestMethod -Method 'get' -headers $AuthHeaders -Uri 'https://api.central.sophos.com/whoami/v1' -UseBasicParsing)
-if(!$TenantID -and !$APIHost){
-    # Get Tenant info and APIHost/ if not specified 
-    Write-Output 'INFO: Retrieving Tenant ID and APIHost/Data Region'
+
+if($WhoAmIResponse.idtype -eq "tenant"){
     $APIHost = $WhoAmIResponse.apihosts.dataRegion
     $TenantID = $WhoAmIResponse.id
-}
-else{
-    if($WhoAmIResponse.idtype -ne "tenant"){
-        Write-Error "ERROR: The API Client credentials given are not for a Tenant and the Tenant ID and API Host values were not specified." -ErrorAction Stop
+    $Header = @{
+        'Authorization' = "Bearer $AuthToken"
+        'X-Tenant-ID' = $TenantID
     }
+}
+elseif($WhoAmIResponse.idtype -eq "partner"){
+    $SophosTenantId = $SecureVars.SophosTenantId
+    if ([string]::IsNullOrEmpty($SophosTenantId)) {
+        throw "SophosTenantId secure variable not specified in Nerdio account"
+    }
+    $SophosId = $WhoAmIResponse.id
+    $Header = @{
+        'Authorization' = "Bearer $AuthToken"
+        'X-Partner-ID' = $SophosId
+    }
+    $tenant = Invoke-RestMethod   "https://api.central.sophos.com/partner/v1/tenants/$SophosTenantId" -Method get -UseBasicParsing -Headers $Header
+    $APIHost = $tenant.APIHost
+    $Header = @{Authorization = "Bearer $AuthToken"
+                    'X-Tenant-ID' = $SophosTenantId
+                    Accept = 'application/json'}
 }
 
 # Query for endpoint with hostname that matches Azure VM name, get endpoint ID
-$TenantsHeader = @{
-    'Authorization' = "Bearer $AuthToken"
-    'X-Tenant-ID' = $TenantID
-}
+write-Host "INFO: APIHost is $APIHost"
 Write-Output "INFO: Searching registered endpoints for matching VM hostname"
-$EndpointResponse = (Invoke-RestMethod -Method 'get' -Headers $TenantsHeader -uri "$APIHost/endpoint/v1/endpoints?hostnameContains=$AzureVMName" -UseBasicParsing)
+$EndpointResponse = (Invoke-RestMethod -Method 'get' -Headers $Header -uri "$APIHost/endpoint/v1/endpoints?hostnameContains=$AzureVMName" -UseBasicParsing)
 if(!$EndpointResponse.items){
     Write-Host "ERROR: No endpoints found in sophos central that match the hostname. Ending script"
     exit
@@ -78,7 +89,7 @@ foreach($Endpoint in ($EndpointResponse.items)){
 
 # Send DELETE request to Sophos API and provide endpoint ID
 Write-Output "INFO: Attempting to Delete $AzureVMName from Sophos Central"
-$DeleteResponse = (Invoke-RestMethod -Method 'delete' -Headers $TenantsHeader -uri "$APIHost/endpoint/v1/endpoints/$EndpointID" -UseBasicParsing)
+$DeleteResponse = (Invoke-RestMethod -Method 'delete' -Headers $Header -uri "$APIHost/endpoint/v1/endpoints/$EndpointID" -UseBasicParsing)
 
 # Check if request was successful
 Write-Output "INFO: Checking response to confirm deletion"
