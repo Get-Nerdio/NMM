@@ -1,0 +1,11 @@
+{
+    "@odata.type": "#microsoft.graph.windowsHealthMonitoringConfiguration",
+    "deviceManagementApplicabilityRuleOsEdition":  null,
+    "deviceManagementApplicabilityRuleOsVersion":  null,
+    "deviceManagementApplicabilityRuleDeviceMode":  null,
+    "description": "",
+    "displayName": "NMM Enable Endpoint Analytics",
+    "allowDeviceHealthMonitoring": "enabled",
+    "configDeviceHealthMonitoringScope": "bootPerformance",
+    "configDeviceHealthMonitoringCustomScope": null
+}

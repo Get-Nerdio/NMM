@@ -1,0 +1,20 @@
+{
+    "@odata.type": "#microsoft.graph.windows10CustomConfiguration",
+    "deviceManagementApplicabilityRuleOsEdition":  null,
+    "deviceManagementApplicabilityRuleOsVersion":  null,
+    "deviceManagementApplicabilityRuleDeviceMode":  null,
+    "description": null,
+    "displayName": "NMM Enable SSPR from logon screen",
+    "omaSettings": [
+        {
+            "@odata.type": "#microsoft.graph.omaSettingInteger",
+            "displayName": "AllowAadPasswordReset",
+            "description": null,
+            "omaUri": "./Device/Vendor/MSFT/Policy/Config/Authentication/AllowAadPasswordReset",
+            "secretReferenceValueId": null,
+            "isEncrypted": false,
+            "value": 1,
+            "isReadOnly": false
+        }
+    ]
+}
