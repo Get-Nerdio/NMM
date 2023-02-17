@@ -1,4 +1,5 @@
 {
+    "_wap_tags": "Security",
     "templateId": "d1174162-1dd2-4976-affc-6667049ab0ae",
     "description": "Cloned policy from NMM Force Bitlocker for fixed disks only",
     "displayName": "NMM Force Bitlocker for fixed and removable disks",
