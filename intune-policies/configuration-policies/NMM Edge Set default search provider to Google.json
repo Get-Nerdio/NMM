@@ -1,6 +1,6 @@
 {
     "_wap_tags": "Edge",
-    "description": "",
+    "description": "Changes the default search provider in Edge from Bing to Google.",
     "name": "NMM Edge Set default search provider to Google",
     "platforms": "windows10",
     "settingCount": 4,

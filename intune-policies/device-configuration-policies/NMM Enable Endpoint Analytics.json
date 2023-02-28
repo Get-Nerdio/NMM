@@ -4,7 +4,7 @@
     "deviceManagementApplicabilityRuleOsEdition":  null,
     "deviceManagementApplicabilityRuleOsVersion":  null,
     "deviceManagementApplicabilityRuleDeviceMode":  null,
-    "description": "",
+    "description": "Enables the collection of data required to report on performance and productivity scores for endpoints. Please note this settings in this policy are required for NMM to show the Endpoint Analytics scores in the device properties.\n\nFor more information, please check:\nhttps://learn.microsoft.com/en-us/mem/analytics/overview",
     "displayName": "NMM Enable Endpoint Analytics",
     "allowDeviceHealthMonitoring": "enabled",
     "configDeviceHealthMonitoringScope": "bootPerformance",
