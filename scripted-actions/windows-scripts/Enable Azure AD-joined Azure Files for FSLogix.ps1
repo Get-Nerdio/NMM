@@ -5,9 +5,9 @@
 
 This scripted action requires the following Secure Variables in Nerdio:
 
-AADProfileStorageAccountUser - the name of the storage account
-AADProfileStorageAccountKey - the storage account key (available in Azure portal)
-AADProfileStorageFQDN - e.g. mystorageaccount.file.core.windows.net (do not include the /share directory)
+AADSAAccountUser - the name of the storage account
+AADSAAccountKey - the storage account key (available in Azure portal)
+AADSAFQDN - e.g. mystorageaccount.file.core.windows.net (do not include the /share directory)
 
 WARNING: If using Windows 11 22H2 or later, this configuration will disable Windows Defender Credential Guard.
 
@@ -17,12 +17,12 @@ This script is based on work by Marcel Meurer
 
 #>
 
-$SecureVars.AADProfileStorageAccountUser
-$SecureVars.AADProfileStorageAccountKey
-$SecureVars.AADProfileStorageFQDN
+$User = $SecureVars.AADSAAccountUser
+$Key = $SecureVars.AADSAAccountKey
+$FQDN = $SecureVars.AADSAFQDN
 
 
-cmdkey.exe /add:$SecureVars.AADProfileStorageFQDN /user:localhost\$SecureVars.AADProfileStorageAccountUser /pass:$SecureVars.AADProfileStorageAccountKey
+cmdkey.exe /add:$FQDN /user:localhost\$User /pass:$Key
 
 
 $WinVersion = Get-ComputerInfo 
