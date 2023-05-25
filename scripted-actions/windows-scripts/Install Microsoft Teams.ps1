@@ -8,7 +8,7 @@ This script performs the following:
 2. Uninstall MSTeams and WebRTC program
 3. Downloads and Installs latest version of MS Teams machine-wide (Not per-user)
 4. Downloads and Installs latest version of WebRTC component
-5. Sends logs to C:Windows\temp\NerdioManagerLogs\ScriptedActions\msteams
+5. Sends logs to C:\Windows\temp\NerdioManagerLogs\ScriptedActions\msteams
 #>
 
 # Start powershell logging
