@@ -7,7 +7,7 @@ This script will download the OneDriveSetup.exe file from the Microsoft link and
 #>
 
 # Define the URL of the OneDriveSetup.exe file
-$OneDriveSetupUrl = "https://go.microsoft.com/fwlink/?linkid=844652"
+$OneDriveSetupUrl = "https://go.microsoft.com/fwlink/p/?LinkID=2182910"
 
 # Define the path where the OneDriveSetup.exe file will be downloaded
 $DownloadPath = "C:\Temp\OneDriveSetup.exe"
