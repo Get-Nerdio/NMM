@@ -14,4 +14,19 @@ $sub = get-azsubscription -SubscriptionId $AzureSubscriptionId
 
 set-azcontext -subscription $sub 
 
+# Get status of vm
+$vm = Get-AzVM -ResourceGroupName $AzureResourceGroupName -Name $AzureVMName -Status
+
+# if vm is stopped, start it
+if ($vm.PowerState -eq "VM deallocated") {
+    Write-Output "Starting VM $AzureVMName"
+    Start-AzVM -ResourceGroupName $AzureResourceGroupName -Name $AzureVMName
+}
+
 Remove-AzVMExtension -ResourceGroupName $AzureResourceGroupName -Name "SentinelOne.WindowsExtension" -VMName $AzureVMName -Force
+
+# if VM was stopped, stop it again
+if ($vm.PowerState -eq "VM deallocated") {
+    Write-Output "Stopping VM $AzureVMName"
+    Stop-AzVM -ResourceGroupName $AzureResourceGroupName -Name $AzureVMName -Force
+}

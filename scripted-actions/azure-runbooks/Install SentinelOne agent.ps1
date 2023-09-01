@@ -38,6 +38,20 @@ $Settings = @{"WindowsAgentVersion" = $AgentVersion; "SiteToken" = $SiteToken}
 
 $ProtectedSettings = @{"SentinelOneConsoleAPIKey" = $APItoken};
 
+# Get status of vm
+$vm = Get-AzVM -ResourceGroupName $AzureResourceGroupName -Name $AzureVMName -Status
+
+# if vm is stopped, start it
+if ($vm.PowerState -eq "VM deallocated") {
+    Write-Output "Starting VM $AzureVMName"
+    Start-AzVM -ResourceGroupName $AzureResourceGroupName -Name $AzureVMName
+}
+
+# Install SentinelOne agent
 Set-AzVMExtension -ResourceGroupName $AzureResourceGroupName -Location $AzureRegionName -VMName $AzureVMName -Name "SentinelOne.WindowsExtension" -Publisher "SentinelOne.WindowsExtension" -Type "WindowsExtension" -TypeHandlerVersion "1.0" -Settings $Settings -ProtectedSettings $ProtectedSettings
 
-
+# if VM was stopped, stop it again
+if ($vm.PowerState -eq "VM deallocated") {
+    Write-Output "Stopping VM $AzureVMName"
+    Stop-AzVM -ResourceGroupName $AzureResourceGroupName -Name $AzureVMName -Force
+}
