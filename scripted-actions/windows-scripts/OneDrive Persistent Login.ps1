@@ -7,6 +7,6 @@ For Marketplace images, OneDrive does not stay signed in. This script will enabl
 
 #>
 
-REG ADD "HKCU\SOFTWARE\Microsoft\OneDrive" /v EnableADAL /t REG_DWORD /d 2 /f
-REG ADD "HKLM\SOFTWARE\Policies\Microsoft\OneDrive" /v SilentAccountConfig /t REG_DWORD /d 0x1 /f
-REG ADD "HKCU\SOFTWARE\Microsoft\OneDrive" /v SilentBusinessConfigCompleted /t REG_DWORD /d 1 /f
+New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\OneDrive" -Name "EnableADAL" -Value 2 -PropertyType DWord -Force
+New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\OneDrive" -Name "SilentAccountConfig" -Value 1 -PropertyType DWord -Force
+New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\OneDrive" -Name "SilentBusinessConfigCompleted" -Value 1 -PropertyType DWord -Force
