@@ -21,6 +21,15 @@ Start-Transcript -Path "C:\Windows\temp\NerdioManagerLogs\ScriptedActions\msteam
 Write-Host "################# New Script Run #################"
 Write-host "Current time (UTC-0): $LogTime"
 
+if (!(Test-Path 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}\') -and !(Test-Path 'HKCU:\SOFTWARE\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}\')) {
+    # download WebView2 installer from https://go.microsoft.com/fwlink/p/?LinkId=2124703
+    Write-Host "INFO: Installing WebView2"
+    $WebView2Installer = "C:\Windows\temp\NerdioManagerLogs\ScriptedActions\msteams\MicrosoftEdgeWebView2Setup.exe"
+    $WebView2InstallerUrl = "https://go.microsoft.com/fwlink/p/?LinkId=2124703"
+    Invoke-WebRequest -Uri $WebView2InstallerUrl -OutFile $WebView2Installer -UseBasicParsing
+    Start-Process $WebView2Installer -ArgumentList '/silent /install' -Wait
+}
+
 # set registry values for Teams to use VDI optimization 
 Write-Host "INFO: Adjusting registry to set Teams to WVD Environment mode" -ForegroundColor Gray
 reg add HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Teams /v "IsWVDEnvironment" /t REG_DWORD /d 1 /f
