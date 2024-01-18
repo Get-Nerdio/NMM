@@ -63,13 +63,6 @@ if ($null -ne $GetTeams){
     Write-Host "INFO: Teams per-machine Install Found, uninstalling teams"
 }
 
-# WebRTC uninstall logic
-$GetWebRTC = get-wmiobject Win32_Product | Where-Object IdentifyingNumber -match "{FB41EDB3-4138-4240-AC09-B5A184E8F8E4}"
-if ($null -ne $GetWebRTC){
-    Start-Process C:\Windows\System32\msiexec.exe -ArgumentList '/x "{FB41EDB3-4138-4240-AC09-B5A184E8F8E4}" /qn /norestart' -Wait 2>&1
-    Write-Host "INFO: WebRTC Install Found, uninstalling Current version of WebRTC"
-}
-
 # make directories to hold new install 
 mkdir "C:\Windows\Temp\msteams_sa\install" -Force
 
