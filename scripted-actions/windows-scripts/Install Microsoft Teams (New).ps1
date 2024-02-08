@@ -21,6 +21,7 @@ Start-Transcript -Path "C:\Windows\temp\NerdioManagerLogs\ScriptedActions\msteam
 Write-Host "################# New Script Run #################"
 Write-host "Current time (UTC-0): $LogTime"
 
+
 if (!(Test-Path 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}\') -and !(Test-Path 'HKCU:\SOFTWARE\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}\')) {
     # download WebView2 installer from https://go.microsoft.com/fwlink/p/?LinkId=2124703
     Write-Host "INFO: Installing WebView2"
@@ -29,6 +30,7 @@ if (!(Test-Path 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F30172
     Invoke-WebRequest -Uri $WebView2InstallerUrl -OutFile $WebView2Installer -UseBasicParsing
     Start-Process $WebView2Installer -ArgumentList '/silent /install' -Wait
 }
+
 
 # set registry values for Teams to use VDI optimization 
 Write-Host "INFO: Adjusting registry to set Teams to WVD Environment mode" -ForegroundColor Gray
@@ -62,6 +64,7 @@ if ($null -ne $GetTeams){
     Start-Process C:\Windows\System32\msiexec.exe -ArgumentList '/x "{731F6BAA-A986-45A4-8936-7C3AAAAA760B}" /qn /norestart' -Wait 2>&1
     Write-Host "INFO: Teams per-machine Install Found, uninstalling teams"
 }
+
 
 # make directories to hold new install 
 mkdir "C:\Windows\Temp\msteams_sa\install" -Force
