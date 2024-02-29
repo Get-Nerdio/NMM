@@ -22,7 +22,7 @@ Set-AzContext -SubscriptionId $AzureSubscriptionID
 $HostPoolRG = (Get-AzResource -ResourceId $HostpoolID).ResourceGroupName
 
 # Retrieve FQDN of session host by using Tag (FQDN required by WVD Powershell command)
-$HostFQDN = (Get-AzResource -ResourceGroupName $AzureResourceGroupName -Name $AzureVMName).Tags.NMW_VM_FQDN
+$HostFQDN = (Get-AzResource -ResourceGroupName $AzureResourceGroupName -Name $AzureVMName).Tags.WAP_VM_FQDN
 
 # Use FQDN to set session host to drain mode (Unavailable)
 Write-Output "INFO: Setting Session Host $HostFQDN to Drain-Mode"
