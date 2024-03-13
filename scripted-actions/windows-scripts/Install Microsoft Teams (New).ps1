@@ -25,7 +25,7 @@ if (!(Test-Path 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F30172
     # download WebView2 installer from https://go.microsoft.com/fwlink/p/?LinkId=2124703
     Write-Host "INFO: Installing WebView2"
     $WebView2Installer = "C:\Windows\temp\NerdioManagerLogs\ScriptedActions\msteams\MicrosoftEdgeWebView2Setup.exe"
-    $WebView2InstallerUrl = https://go.microsoft.com/fwlink/p/?LinkId=2124703
+    $WebView2InstallerUrl = "https://go.microsoft.com/fwlink/p/?LinkId=2124703"
     Invoke-WebRequest -Uri $WebView2InstallerUrl -OutFile $WebView2Installer -UseBasicParsing
     Start-Process $WebView2Installer -ArgumentList '/silent /install' -Wait
 }
@@ -74,7 +74,7 @@ if ($null -ne $GetWebRTC){
 mkdir "C:\Windows\Temp\msteams_sa\install" -Force
  
 # grab MSI installer for MSTeams
-$DLink = https://go.microsoft.com/fwlink/?linkid=2243204&clcid=0x409
+$DLink = "https://go.microsoft.com/fwlink/?linkid=2243204&clcid=0x409"
 Invoke-WebRequest -Uri $DLink -OutFile "C:\Windows\Temp\msteams_sa\install\teamsbootstrapper.exe" -UseBasicParsing
  
 # use installer to install Machine-Wide
@@ -82,7 +82,7 @@ Write-Host "INFO: Installing MS Teams"
 Start-Process C:\Windows\Temp\msteams_sa\install\teamsbootstrapper.exe -ArgumentList '-p'
  
 # use MS shortcut to WebRTC install
-$dlink2 = https://aka.ms/msrdcwebrtcsvc/msi
+$dlink2 = "https://aka.ms/msrdcwebrtcsvc/msi"
  
 # grab MSI installer for WebRTC
 Invoke-WebRequest -Uri $DLink2 -OutFile "C:\Windows\Temp\msteams_sa\install\MsRdcWebRTCSvc_x64.msi" -UseBasicParsing
