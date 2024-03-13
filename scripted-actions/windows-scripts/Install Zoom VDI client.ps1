@@ -8,7 +8,7 @@ This script installs the Zoom VDI client for use on WVD Session hosts.
 To install specific versions, update the URL variables below with links to the .msi installers.
 #>
 
-$ZoomClientUrl= "https://zoom.us/download/vdi/5.16.10.24420/ZoomInstallerVDI.msi?archType=x64"
+$ZoomClientUrl= "https://zoom.us/download/vdi/5.17.6.24660/ZoomInstallerVDI.msi?archType=x64"
 
 # Start powershell logging
 $SaveVerbosePreference = $VerbosePreference
