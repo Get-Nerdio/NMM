@@ -1,0 +1,34 @@
+{
+  "_wap_tags": "Defender for Endpoint",
+  "description": "Activates macOS firewall, blocks all incoming connections, and leaves stealth mode disabled, indicating the device remains visible on the network. No specific applications are configured to bypass the firewall, allowing for separate customization.",
+  "displayName": "NMM macOS Firewall",
+  "settingsDelta": [
+    {
+      "@odata.type": "#microsoft.graph.deviceManagementBooleanSettingInstance",
+      "id": "e118dc4b-65f8-4f6a-8b47-ef8a625563fa",
+      "definitionId": "deviceConfiguration--macOSEndpointProtectionConfiguration_firewallEnabled",
+      "valueJson": "true",
+      "value": true
+    },
+    {
+      "@odata.type": "#microsoft.graph.deviceManagementBooleanSettingInstance",
+      "id": "24273c57-93f0-4c3f-ad71-1e834062092d",
+      "definitionId": "deviceConfiguration--macOSEndpointProtectionConfiguration_firewallBlockAllIncoming",
+      "valueJson": "true",
+      "value": true
+    },
+    {
+      "@odata.type": "#microsoft.graph.deviceManagementBooleanSettingInstance",
+      "id": "1b621574-6e6c-4f5e-9b56-8ee2954c4242",
+      "definitionId": "deviceConfiguration--macOSEndpointProtectionConfiguration_firewallEnableStealthMode",
+      "valueJson": "false",
+      "value": false
+    },
+    {
+      "@odata.type": "#microsoft.graph.deviceManagementCollectionSettingInstance",
+      "id": "9f355684-273b-4a11-b559-f172e97c6f1c",
+      "definitionId": "deviceConfiguration--macOSEndpointProtectionConfiguration_firewallApplications",
+      "valueJson": "null"
+    }
+  ]
+}

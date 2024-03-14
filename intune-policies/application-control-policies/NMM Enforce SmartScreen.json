@@ -1,0 +1,28 @@
+{
+  "_wap_tags": "Defender for Endpoint",
+  "description": "AppLocker is not configured, SmartScreen overrides for files are blocked, and SmartScreen is enabled in the shell, enforcing strict security measures against unverified files and applications.",
+  "displayName": "NMM Enforce SmartScreen",
+  "settingsDelta": [
+    {
+      "@odata.type": "#microsoft.graph.deviceManagementStringSettingInstance",
+      "id": "a03d28b6-ed63-488b-b1d3-ac9a89122606",
+      "definitionId": "deviceConfiguration--windows10EndpointProtectionConfiguration_appLockerApplicationControl",
+      "valueJson": "\"notConfigured\"",
+      "value": "notConfigured"
+    },
+    {
+      "@odata.type": "#microsoft.graph.deviceManagementBooleanSettingInstance",
+      "id": "add4f0ad-e26e-493b-905a-b339195dc8da",
+      "definitionId": "deviceConfiguration--windows10EndpointProtectionConfiguration_smartScreenBlockOverrideForFiles",
+      "valueJson": "true",
+      "value": true
+    },
+    {
+      "@odata.type": "#microsoft.graph.deviceManagementBooleanSettingInstance",
+      "id": "c351d4c9-e325-4dea-89e8-0524d0b12147",
+      "definitionId": "deviceConfiguration--windows10EndpointProtectionConfiguration_smartScreenEnableInShell",
+      "valueJson": "true",
+      "value": true
+    }
+  ]
+}
