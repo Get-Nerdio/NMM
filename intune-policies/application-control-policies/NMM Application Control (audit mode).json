@@ -1,28 +1,25 @@
 {
-  "_wap_tags": "Defender for Endpoint",
-  "description": "Sets AppLocker to audit mode for Store apps and SmartLocker, doesn\u0027t block file overrides by SmartScreen, and disables SmartScreen prompts in the shell. This config audits app usage without enforcing restrictions or SmartScreen interventions.",
-  "displayName": "NMM Application Control (audit mode)",
-  "settingsDelta": [
-    {
-      "@odata.type": "#microsoft.graph.deviceManagementStringSettingInstance",
-      "id": "e95b52e5-3125-42d1-9d0e-efc6cd5ed78b",
-      "definitionId": "deviceConfiguration--windows10EndpointProtectionConfiguration_appLockerApplicationControl",
-      "valueJson": "\"auditComponentsStoreAppsAndSmartlocker\"",
-      "value": "auditComponentsStoreAppsAndSmartlocker"
-    },
-    {
-      "@odata.type": "#microsoft.graph.deviceManagementBooleanSettingInstance",
-      "id": "4c1080f3-6109-42b8-bc74-b5efc1ff7aa8",
-      "definitionId": "deviceConfiguration--windows10EndpointProtectionConfiguration_smartScreenBlockOverrideForFiles",
-      "valueJson": "false",
-      "value": false
-    },
-    {
-      "@odata.type": "#microsoft.graph.deviceManagementBooleanSettingInstance",
-      "id": "ed895b29-ab52-4e2c-820b-92696995e87c",
-      "definitionId": "deviceConfiguration--windows10EndpointProtectionConfiguration_smartScreenEnableInShell",
-      "valueJson": "false",
-      "value": false
-    }
-  ]
+    "_wap_tags": "Defender for Endpoint",
+    "description": "Sets AppLocker to audit mode for Store apps and SmartLocker, doesn\u0027t block file overrides by SmartScreen, and disables SmartScreen prompts in the shell. This config audits app usage without enforcing restrictions or SmartScreen interventions.",
+    "displayName": "NMM Application Control (audit mode)",
+    "settingsDelta": [
+        {
+            "@odata.type": "#microsoft.graph.deviceManagementStringSettingInstance",
+            "definitionId": "deviceConfiguration--windows10EndpointProtectionConfiguration_appLockerApplicationControl",
+            "valueJson": "\"auditComponentsStoreAppsAndSmartlocker\"",
+            "value": "auditComponentsStoreAppsAndSmartlocker"
+        },
+        {
+            "@odata.type": "#microsoft.graph.deviceManagementBooleanSettingInstance",
+            "definitionId": "deviceConfiguration--windows10EndpointProtectionConfiguration_smartScreenBlockOverrideForFiles",
+            "valueJson": "false",
+            "value": false
+        },
+        {
+            "@odata.type": "#microsoft.graph.deviceManagementBooleanSettingInstance",
+            "definitionId": "deviceConfiguration--windows10EndpointProtectionConfiguration_smartScreenEnableInShell",
+            "valueJson": "false",
+            "value": false
+        }
+    ]
 }
