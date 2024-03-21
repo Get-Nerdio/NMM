@@ -15,6 +15,6 @@
         "/intune-policies/microsoft-defender-antivirus-policies/NMM Defender Antivirus for macOS.json",
         "/intune-policies/microsoft-defender-antivirus-policies/NMM Defender Antivirus for Windows 10_11.json",
         "/intune-policies/windows-firewall-policies/NMM Windows Defender Firewall.json",
-        "/intune-policies/endpoint-detection-and-response-policies/NMM Defender onboarding for Windows 10_11 (with specific secret).json"
+        "/intune-policies/endpoint-detection-and-response-policies/NMM Defender onboarding for Windows 10_11.json"
     ]
 }
