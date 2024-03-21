@@ -1,7 +1,7 @@
 {
     "_wap_tags": "Defender for Endpoint",
     "description": "",
-    "name": "NMM Defender onboarding for Windows 10/11 autoconnect",
+    "name": "NMM Defender onboarding for Windows 10/11",
     "platforms": "windows10",
     "settingCount": 2,
     "technologies": "mdm,microsoftSense",
