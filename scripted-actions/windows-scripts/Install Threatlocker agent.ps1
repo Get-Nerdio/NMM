@@ -19,11 +19,15 @@ Set these up in Nerdio Manager under Settings->Portal. The variables to create a
 
 $ThreatlockerOrgName = $SecureVars.ThreatlockerOrgName;
 $ThreatlockerIdentifier = $SecureVars.ThreatlockerUniqueId;
+$ThreatlockerInstance = $SecureVars.ThreatlockerInstance;
 
 ##### Variables #####
 
 #Set Group Name 
 $ThreatlockerGroupName = "Workstations";
+if ([string]::IsNullOrEmpty($ThreatlockerInstance)) {
+    $ThreatlockerInstance = "g";
+}
 
 ##### Script Logic #####
 
@@ -32,7 +36,7 @@ if(($ThreatlockerOrgName -eq $null) -and  ($ThreatlockerIdentifier -eq $null))  
 }
 
 try {
-    $Url = 'https://api.threatlocker.com/getgroupkey.ashx'; 
+    $Url = "https://api.$ThreatlockerInstance`.threatlocker.com/getgroupkey.ashx"; 
     $Headers = @{'Authorization'=$ThreatlockerIdentifier;'OrganizationName'=$ThreatlockerOrgName;'GroupName'=$ThreatlockerGroupName}; 
     
     [Net.ServicePointManager]::SecurityProtocol = [Enum]::ToObject([Net.SecurityProtocolType], 3072)
