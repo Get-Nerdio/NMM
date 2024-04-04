@@ -33,6 +33,8 @@ $ThreatlockerInstance = $SecureVars.ThreatlockerInstance;
 
 #Set Group Name 
 $ThreatlockerGroupName = "Workstations";
+
+#Set Threatlocker Instance
 if ([string]::IsNullOrEmpty($ThreatlockerInstance)) {
     $ThreatlockerInstance = "g";
 }
@@ -52,7 +54,7 @@ try {
     $GroupId = $response.split([Environment]::NewLine)[0].split(':')[1].trim();
 }
 catch {
-    Write-Output "Failed to get GroupId";
+    Write-Output "Failed to get GroupId. Check the Notes section for information about setting the ThreatLocker instance.";
     throw $_;
     Exit 1;
 }
