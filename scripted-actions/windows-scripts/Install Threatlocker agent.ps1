@@ -45,6 +45,7 @@ try {
 }
 catch {
     Write-Output "Failed to get GroupId";
+    throw $_;
     Exit 1;
 }
 
