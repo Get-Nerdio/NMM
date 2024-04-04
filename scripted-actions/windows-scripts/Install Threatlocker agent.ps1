@@ -4,15 +4,23 @@
 
 <#
 Notes:
-The installation script requires an organization name and ThreatLocker Unique Identifier.
+The installation script requires an organization name, ThreatLocker Unique Identifier,
+and a ThreatLocker Instance.
 
 Unique Identifier can be found in Deployment Center under the RMM and Script Deployment section. 
 https://threatlocker.kb.help/getting-your-unique-identifier-from-threatlocker/
+
+The ThreatLocker instance can be foundn in the ThreatLocker portal URL, under Help. Find
+"ThreatLocker Access" will be followed by a letter. This letter is the instance. For example,
+
+ThreatLocker Access (G) - The instance is "g". G is the default instance; if not specified, 
+the script will use "g".
 
 You must provide secure variables to this script as seen in the Required Variables section. 
 Set these up in Nerdio Manager under Settings->Portal. The variables to create are:
     ThreatlockerOrgName
     ThreatlockerUniqueId
+    ThreatlockerInstance
 #>
 
 ##### Required Variables #####
