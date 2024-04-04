@@ -10,7 +10,7 @@ and a ThreatLocker Instance.
 Unique Identifier can be found in Deployment Center under the RMM and Script Deployment section. 
 https://threatlocker.kb.help/getting-your-unique-identifier-from-threatlocker/
 
-The ThreatLocker instance can be foundn in the ThreatLocker portal URL, under Help. Find
+The ThreatLocker instance can be found in the ThreatLocker portal URL, under Help. Find
 "ThreatLocker Access" will be followed by a letter. This letter is the instance. For example,
 
 ThreatLocker Access (G) - The instance is "g". G is the default instance; if not specified, 
