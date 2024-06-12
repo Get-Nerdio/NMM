@@ -17,6 +17,7 @@ See https://docs.microsoft.com/en-us/azure/virtual-desktop/install-office-on-wvd
 #>
 
 # Configure powershell logging
+$ErrorActionPreference = 'Stop'
 $SaveVerbosePreference = $VerbosePreference
 $VerbosePreference = 'continue'
 $VMTime = Get-Date
@@ -30,7 +31,12 @@ Write-host "Current time (UTC-0): $LogTime"
 mkdir "$env:windir\Temp\odt_sa\raw" -Force
 
 # parse through the MS Download Center page to get the most up-to-date download link
-$MSDlSite2 = Invoke-WebRequest "https://www.microsoft.com/en-us/download/confirmation.aspx?id=49117" -UseBasicParsing
+if ($PSVersionTable.PSVersion.major -ge 7) {$MSDlSite2 = Invoke-WebRequest "https://www.microsoft.com/en-us/download/details.aspx?id=49117" -UseBasicParsing -SkipHttpErrorCheck}
+else {$MSDlSite2 = Invoke-WebRequest "https://www.microsoft.com/en-us/download/confirmation.aspx?id=49117" -UseBasicParsing }
+if ($MSDlSite2.StatusCode -ne 200) {
+    Write-Host "Failed to download the page. Status code: $($MSDlSite2.StatusCode)"
+    exit
+}
 ForEach ($Href in $MSDlSite2.Links.Href)
 {
     if ($Href -match "officedeploymenttool" ){

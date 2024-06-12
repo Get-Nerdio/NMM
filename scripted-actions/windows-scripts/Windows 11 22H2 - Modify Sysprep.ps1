@@ -1,5 +1,5 @@
-#description: (PREVIEW) Modifies the Specialize.xml file to prevent sysprep errors in AD-joined Win11 images
-#tags: Nerdio, Preview
+#description: Modifies the Specialize.xml file to prevent sysprep errors in AD-joined Win11 images
+#tags: Nerdio
 
 <#
 Notes: There is an issue with images created from Active Directory-joined Windows 11 VMs that prevents VMs 
