@@ -45,6 +45,7 @@ $LogTime = $VMTime.ToUniversalTime()
 
 Write-Log "################# New Script Run #################"
 Write-Log "Current time (UTC-0): $LogTime"
+
 if (!(Test-Path 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}\') -and !(Test-Path 'HKCU:\SOFTWARE\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}\')) {
     # download WebView2 installer from https://go.microsoft.com/fwlink/p/?LinkId=2124703
     Write-Log "INFO: Installing WebView2"
