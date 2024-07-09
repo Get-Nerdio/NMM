@@ -11,14 +11,39 @@ https://developer.sophos.com/docs/endpoint-v1/1/overview
 #>
 
 # Enable Logging
+function Write-Log {
+    param
+    (
+        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        [string]$Message
+    )
+    try {
+        Write-Host $Message
+        $tempFolder = [environment]::GetEnvironmentVariable('TEMP', 'Machine')
+        $logsFolderName = "NerdioManagerLogs\ScriptedActions\sophosunregister"
+        $logsPath = "$tempFolder\$logsFolderName"
+  
+        if (-not (Test-Path -Path $logsPath)) {
+            New-Item -Path $tempFolder -Name $logsFolderName -ItemType Directory -Force | Out-Null
+        }
+  
+        $DateTime = Get-Date -Format "MM-dd-yy HH:mm:ss"
+        if ($Message) {
+            Add-Content -Value "$DateTime - $Message" -Path "$logsPath\ps_log.txt"
+        }
+    }
+    catch {
+        Write-Error $_.Exception.Message
+    }
+}
+
 $SaveVerbosePreference = $VerbosePreference
 $VerbosePreference = 'continue'
 $VMTime = Get-Date
 $LogTime = $VMTime.ToUniversalTime()
-mkdir "C:\Windows\temp\NerdioManagerLogs\ScriptedActions\sophosunregister" -Force
-Start-Transcript -Path "C:\Windows\temp\NerdioManagerLogs\ScriptedActions\sophosunregister\ps_log.txt" -Append
-Write-Host "################# New Script Run #################"
-Write-host "Current time (UTC-0): $LogTime"
+
+Write-Log "################# New Script Run #################"
+Write-Log "Current time (UTC-0): $LogTime"
 
 # Pass in secure variables from Nerdio Manager
 $ClientID     = $SecureVars.sophosclientid
@@ -39,7 +64,7 @@ $AuthBody = @{
     client_secret = $ClientSecret
     scope = "token"
 }
-Write-Output "INFO: Retrieving Auth Info using Client Secrets"
+Write-Log "INFO: Retrieving Auth Info using Client Secrets"
 $AuthResponse = (Invoke-RestMethod -Method 'post' -Uri 'https://id.sophos.com/api/v2/oauth2/token' -Body $AuthBody)
 $AuthToken = $AuthResponse.access_token
 $AuthHeaders = @{Authorization = "Bearer $AuthToken"}
@@ -72,35 +97,33 @@ elseif($WhoAmIResponse.idtype -eq "partner"){
 }
 
 # Query for endpoint with hostname that matches Azure VM name, get endpoint ID
-write-Host "INFO: APIHost is $APIHost"
-Write-Output "INFO: Searching registered endpoints for matching VM hostname"
+Write-Log "INFO: APIHost is $APIHost"
+Write-Log "INFO: Searching registered endpoints for matching VM hostname"
 $EndpointResponse = (Invoke-RestMethod -Method 'get' -Headers $Header -uri "$APIHost/endpoint/v1/endpoints?hostnameContains=$AzureVMName" -UseBasicParsing)
 if(!$EndpointResponse.items){
-    Write-Host "ERROR: No endpoints found in sophos central that match the hostname. Ending script"
+    Write-Log "ERROR: No endpoints found in sophos central that match the hostname. Ending script"
     exit
 }
 # Sophos API can return multiple endpoints, the hostname search is not strict. Go through results and get exact match
 foreach($Endpoint in ($EndpointResponse.items)){ 
     if($Endpoint.Hostname -match "$AzureVMName"){
         $EndpointID = $Endpoint.id
-        Write-Output "INFO: Found Endpoint ID: $EndpoindID"
+        Write-Log "INFO: Found Endpoint ID: $EndpoindID"
     }
 }
 
 # Send DELETE request to Sophos API and provide endpoint ID
-Write-Output "INFO: Attempting to Delete $AzureVMName from Sophos Central"
+Write-Log "INFO: Attempting to Delete $AzureVMName from Sophos Central"
 $DeleteResponse = (Invoke-RestMethod -Method 'delete' -Headers $Header -uri "$APIHost/endpoint/v1/endpoints/$EndpointID" -UseBasicParsing)
 
 # Check if request was successful
-Write-Output "INFO: Checking response to confirm deletion"
+Write-Log "INFO: Checking response to confirm deletion"
 Start-Sleep -Seconds 15
 if($DeleteResponse.deleted = "true"){
-    Write-Output "INFO: Successfully deleted $AzureVMName from Sophos Central"
+    Write-Log "INFO: Successfully deleted $AzureVMName from Sophos Central"
 }
 else {
-    Write-Output "Error: Unable to delete endpoint from Sophos Central"
+    Write-Log "Error: Unable to delete endpoint from Sophos Central"
 }
 
-# End Logging
-Stop-Transcript
 $VerbosePreference=$SaveVerbosePreference

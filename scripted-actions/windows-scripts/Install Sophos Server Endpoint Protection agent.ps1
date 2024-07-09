@@ -10,18 +10,43 @@ This script installs Sophos Server Protection Endpoint software components.
 #>
 
 # Start logging
+function Write-Log {
+    param
+    (
+        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        [string]$Message
+    )
+    try {
+        Write-Host $Message
+        $tempFolder = [environment]::GetEnvironmentVariable('TEMP', 'Machine')
+        $logsFolderName = "NerdioManagerLogs\ScriptedActions\sophosinstall"
+        $logsPath = "$tempFolder\$logsFolderName"
+  
+        if (-not (Test-Path -Path $logsPath)) {
+            New-Item -Path $tempFolder -Name $logsFolderName -ItemType Directory -Force | Out-Null
+        }
+  
+        $DateTime = Get-Date -Format "MM-dd-yy HH:mm:ss"
+        if ($Message) {
+            Add-Content -Value "$DateTime - $Message" -Path "$logsPath\ps_log.txt"
+        }
+    }
+    catch {
+        Write-Error $_.Exception.Message
+    }
+}
+
 $SaveVerbosePreference = $VerbosePreference
 $VerbosePreference = 'continue'
 $VMTime  = Get-Date
 $LogTime = $VMTime.ToUniversalTime()
-mkdir "C:\Windows\temp\NerdioManagerLogs\ScriptedActions\sophosinstall" -Force
-Start-Transcript -Path "C:\windows\temp\NerdioManagerLogs\ScriptedActions\sophosinstall\ps_log.txt" -Append
-Write-Host "################# New Script Run #################"
-Write-host "Current time (UTC-0): $LogTime"
+
+Write-Log "################# New Script Run #################"
+Write-Log "Current time (UTC-0): $LogTime"
   
 try {
     # Pass in secure variables from Nerdio Manager
-    Write-host "Setting variables"
+    Write-Log "Setting variables"
     $auth = $SecureVars.sophosauth
     $apikey = $SecureVars.sophosapikey
     $locationsApi = $SecureVars.sophoslocationsapi
@@ -31,21 +56,21 @@ try {
 
 }
 catch {
-    Write-host "Unable to set variables from Nerdio"
+    Write-Log "Unable to set variables from Nerdio"
 }
 
 
 # Error out if required secure variables are not passed
 if ($sophosClientId -and $sophosClientSecret){
     $ApiVersion = 2021
-    Write-Host "Using 2021 Sophos API with client and secret"
+    Write-Log "Using 2021 Sophos API with client and secret"
 }
 elseif(!$auth){
-    Write-Host "ERROR: Required variables for authentication to Sophos not available. Please see documentation for this scripted action"
+    Write-Log "ERROR: Required variables for authentication to Sophos not available. Please see documentation for this scripted action"
     Write-Error "ERROR: Required variables for authentication to Sophos not available. Please see documentation for this scripted action" -ErrorAction Stop
 }
 elseif(!$sophosClientSecret){
-    Write-host "ERROR: Required variables for authentication to Sophos not available. Please see documentation for this scripted action"
+    Write-Log "ERROR: Required variables for authentication to Sophos not available. Please see documentation for this scripted action"
     Write-Error "ERROR: Required variables for authentication to Sophos not available. Please see documentation for this scripted action" -ErrorAction Stop
 }
 elseif(!$locationsApi){
@@ -71,9 +96,9 @@ function Log {
 
     Add-Content -Value "$(Get-DateTime) $data" -Path $logFile
     if ($error) {
-        Write-host "$(Get-DateTime) $data" -ForegroundColor Red
+        Write-Log "$(Get-DateTime) $data" -ForegroundColor Red
     } else {
-        Write-host "$(Get-DateTime) $data"
+        Write-Log "$(Get-DateTime) $data"
     }
 }
 
@@ -131,11 +156,11 @@ function Get-InstallerLink {
         $Headers = @{Authorization = "Bearer $token"}
         $whoAmI = Invoke-RestMethod -Method Get -Uri 'https://api.central.sophos.com/whoami/v1' -Headers $Headers -UseBasicParsing
         # Get Tenant info and APIHost/ if not specified 
-        Write-Host 'INFO: Retrieving Tenant ID and APIHost/Data Region'
+        Write-Log 'INFO: Retrieving Tenant ID and APIHost/Data Region'
         $APIHost = $whoAmI.apihosts.dataRegion
         $SophosID = $whoAmI.id
-        Write-Host "INFO: API host is $APIHost"
-        Write-Host "INFO: SophosId is $SophosID"
+        Write-Log "INFO: API host is $APIHost"
+        Write-Log "INFO: SophosId is $SophosID"
         if ($whoAmI.idtype -eq 'tenant') {
             $Headers += @{'X-Tenant-ID' = $SophosID
                     Accept = 'application/json'}
@@ -148,15 +173,15 @@ function Get-InstallerLink {
             $Headers += @{'X-Partner-ID' = $SophosID
                     Accept = 'application/json'}
             $tenant = Invoke-RestMethod   "https://api.central.sophos.com/partner/v1/tenants/$SophosTenantId" -Method get -UseBasicParsing -Headers $Headers
-            $Tenant | Out-String | Write-Host
+            $Tenant | Out-String | Write-Log
             $APIHost = $tenant.APIHost
             $Headers = @{Authorization = "Bearer $token"
                          'X-Tenant-ID' = $SophosTenantId
                          Accept = 'application/json'}
         }
-        Write-Host "INFO: API host is $APIHost"
+        Write-Log "INFO: API host is $APIHost"
         $DownloadApi = "$APIHost/endpoint/v1/downloads?requestedProducts=coreAgent&requestedProducts=interceptX&requestedProducts=endpointProtection&platforms=windows"
-        Write-Host "INFO: Download Uri is $DownloadApi"
+        Write-Log "INFO: Download Uri is $DownloadApi"
         $DownloadInfo = Invoke-RestMethod -Uri $DownloadApi -Method Get -Headers $Headers -UseBasicParsing
         $DownloadInfo.installers | Where-Object type -eq server | Select-Object downloadurl -ExpandProperty downloadurl    
     }
@@ -204,7 +229,7 @@ function Download-Installer {
 
 $tempDir = $env:TEMP
 if (!(Test-Path $tempDir)) {
-    Write-Host "$(Get-DateTime) $tempDir folder does not exist." -ForegroundColor Red
+    Write-Log "$(Get-DateTime) $tempDir folder does not exist." -ForegroundColor Red
     return
 }
 
@@ -213,8 +238,8 @@ try {
     # first attempt to log to a file, if does not exist file will be created otherwise it will append to an existing log file
     Log "Script processing has started, logging to $logFile"
 } catch {
-    Write-Host "$(Get-DateTime) Unable to write to a log file $logFile" -ForegroundColor Red
-    Write-Host "$(Get-DateTime) Exception Message: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Log "$(Get-DateTime) Unable to write to a log file $logFile" -ForegroundColor Red
+    Write-Log "$(Get-DateTime) Exception Message: $($_.Exception.Message)" -ForegroundColor Red
     return
 }
 
@@ -232,7 +257,7 @@ try {
     return
 }
 
-Write-Host "Running InstallerURL Variable: $InstallerURL"
+Write-Log "Running InstallerURL Variable: $InstallerURL"
 $downloadLocation = "$tempDir\SophosSetup.exe"
 try {
     Run-CommandWithRetry { Download-Installer -url $installerUrl -destination $downloadLocation }
@@ -253,8 +278,6 @@ try {
     Log "Error on installing Sophos Server Protection - $($_.Exception.Message)" -error 1
 }
 
-# End Logging
-Stop-Transcript
 $VerbosePreference=$SaveVerbosePreference
 
 # LEGAL: 'Sophos' and 'Sophos Anti-Virus' are registered trademarks of Sophos Limited and Sophos Group. All other product
