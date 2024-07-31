@@ -1,0 +1,13 @@
+{
+    "name": "Policy Baseline for Intune",
+    "description": "Built-in policy baseline for Intune",
+    "tags": [
+        "Policy Baseline for Intune"
+    ],
+    "baselineType": "ForIntune",
+    "policies": [
+        "/intune-policies/configuration-policies/NMM Autopilot for Standard Users.json",
+        "/intune-policies/configuration-policies/NMM Enable Windows LAPS.json",
+        "/intune-policies/configuration-policies/NMM Windows Update for Business reports.json"
+    ]
+}
