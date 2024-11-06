@@ -1,36 +1,68 @@
-#description: Downloads and installs Zoom VDI client for WVD. Reference https://support.zoom.us/hc/en-us/articles/360052984292 (under "Windows Virtual Desktop") for more information
+#description: Downloads and installs Zoom VDI client for AVD. Reference https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0063810 (under "Azure Virtual Desktop") for more information
 #execution mode: IndividualWithRestart
 #tags: Nerdio, Apps install
 <# 
 Notes:
-This script installs the Zoom VDI client for use on WVD Session hosts.
+This script installs the Zoom VDI client for use on AVD Session hosts.
 
-To install specific versions, update the URL variables below with links to the .msi installers.
+To install specific versions, update the URL in the $zoomClientUrl variable with links to the .msi installers.
 #>
 
-$ZoomClientUrl= "https://zoom.us/download/vdi/5.17.6.24660/ZoomInstallerVDI.msi?archType=x64"
+$zoomClientUrl = "https://zoom.us/download/vdi/latest/ZoomInstallerVDI.msi?archType=x64"
+$logPath = "$env:temp\NerdioManagerLogs\ScriptedActions\zoom_sa"
+$installPath = "$env:temp\zoom_sa\install"
+$installerPath = "$installPath\ZoomInstallerVDI.msi"
 
 # Start powershell logging
 $SaveVerbosePreference = $VerbosePreference
 $VerbosePreference = 'continue'
-$VMTime = Get-Date
-$LogTime = $VMTime.ToUniversalTime()
-mkdir "$env:temp\NerdioManagerLogs\ScriptedActions\zoom_sa" -Force
-Start-Transcript -Path "$env:temp\NerdioManagerLogs\ScriptedActions\zoom_sa\ps_log.txt" -Append
-Write-Host "################# New Script Run #################"
-Write-host "Current time (UTC-0): $LogTime"
+$logTime = (Get-Date).ToUniversalTime()
 
-# Make directory to hold install files
-mkdir "$env:temp\zoom_sa\install" -Force
+try {
+    # Create log directory
+    New-Item -Path $logPath -ItemType Directory -Force | Out-Null
+    Start-Transcript -Path "$logPath\ps_log.txt" -Append
+    Write-Output "################# New Script Run #################"
+    Write-Output "Current time (UTC-0): $logTime"
 
-Invoke-WebRequest -Uri $ZoomClientUrl -OutFile "$env:temp\zoom_sa\install\ZoomInstallerVDI.msi" -UseBasicParsing
+    # Create and prepare install directory
+    New-Item -Path $installPath -ItemType Directory -Force | Out-Null
 
-# Install Zoom. Edit the argument list as desired for customized installs: https://support.zoom.us/hc/en-us/articles/201362163
-Write-Host "INFO: Installing Zoom client. . ."
-Start-Process C:\Windows\System32\msiexec.exe `
--ArgumentList "/i $env:temp\zoom_sa\install\ZoomInstallerVDI.msi /l*v $env:temp\NerdioManagerLogs\ScriptedActions\zoom_sa\zoom_install_log.txt /qn /norestart" -Wait
-Write-Host "INFO: Zoom client install finished."
+    # Download Zoom VDI Client
+    Write-Output "INFO: Downloading Zoom VDI Client..."
+    Invoke-WebRequest -Uri $zoomClientUrl -OutFile $installerPath -UseBasicParsing
 
-# End Logging
-Stop-Transcript
-$VerbosePreference=$SaveVerbosePreference
+    # Install Zoom
+    Write-Output "INFO: Installing Zoom client..."
+    $processArgs = @(
+        "/i"
+        $installerPath
+        "/l*v"
+        "$logPath\zoom_install_log.txt"
+        "/qn"
+        "/norestart"
+    )
+    
+    $process = Start-Process -FilePath "msiexec.exe" -ArgumentList $processArgs -Wait -PassThru
+    
+    if ($process.ExitCode -ne 0) {
+        throw "Zoom installation failed with exit code: $($process.ExitCode)"
+    }
+    
+    Write-Output "INFO: Zoom client install finished successfully."
+}
+catch {
+    Write-Output "ERROR: An error occurred during installation: $_"
+    throw
+}
+finally {
+    # Cleanup
+    if (Test-Path -Path $installPath) {
+        Remove-Item -Path $installPath -Recurse -Force
+        Write-Output "INFO: Install directory cleaned up."
+    }
+    
+    # End Logging
+    Stop-Transcript
+    $VerbosePreference = $SaveVerbosePreference
+}
