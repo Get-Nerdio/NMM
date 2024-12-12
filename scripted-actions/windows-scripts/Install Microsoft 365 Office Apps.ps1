@@ -59,7 +59,7 @@ mkdir "$env:windir\Temp\odt_sa\raw" -Force
 # parse through the MS Download Center page to get the most up-to-date download link
 Write-Log "Parse through the MS Download Center page to get the most up-to-date download link"
 if ($PSVersionTable.PSVersion.major -ge 7) {$MSDlSite2 = Invoke-WebRequest "https://www.microsoft.com/en-us/download/details.aspx?id=49117" -UseBasicParsing -SkipHttpErrorCheck}
-else {$MSDlSite2 = Invoke-WebRequest "https://www.microsoft.com/en-us/download/confirmation.aspx?id=49117" -UseBasicParsing }
+else {$MSDlSite2 = Invoke-WebRequest "https://www.microsoft.com/en-us/download/details.aspx?id=49117" -UseBasicParsing }
 if ($MSDlSite2.StatusCode -ne 200) {
     Write-Host "Failed to download the page. Status code: $($MSDlSite2.StatusCode)"
     exit
