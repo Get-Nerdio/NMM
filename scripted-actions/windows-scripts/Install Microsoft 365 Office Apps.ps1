@@ -19,6 +19,8 @@ See https://docs.microsoft.com/en-us/azure/virtual-desktop/install-office-on-wvd
 # Configure powershell logging
 $ErrorActionPreference = 'Stop'
 
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
 function Write-Log {
   param
   (
