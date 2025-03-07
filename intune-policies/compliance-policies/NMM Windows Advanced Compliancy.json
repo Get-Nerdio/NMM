@@ -19,6 +19,9 @@
     "mobileOsMinimumVersion": null,
     "mobileOsMaximumVersion": null,
     "earlyLaunchAntiMalwareDriverEnabled": false,
+    "firmwareProtectionEnabled": false,
+    "kernelDmaProtectionEnabled": false,
+    "memoryIntegrityEnabled": false,
     "bitLockerEnabled": true,
     "secureBootEnabled": true,
     "codeIntegrityEnabled": true,
@@ -36,5 +39,6 @@
     "tpmRequired": true,
     "deviceCompliancePolicyScript": null,
     "validOperatingSystemBuildRanges": [],
+    "virtualizationBasedSecurityEnabled": false,
     "scheduledActionsForRule": []
 }

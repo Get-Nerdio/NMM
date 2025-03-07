@@ -10,7 +10,6 @@
     "technologies": "mdm",
     "templateReference": {
         "templateId": "adc46e5a-f4aa-4ff6-aeff-4f27bc525796_1",
-        "templateFamily@odata.type": "#microsoft.graph.deviceManagementConfigurationTemplateFamily",
         "templateFamily": "endpointSecurityAccountProtection",
         "templateDisplayName": "Local admin password solution (Windows LAPS)",
         "templateDisplayVersion": "Version 1"
@@ -22,14 +21,11 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_laps_policies_backupdirectory",
                 "settingInstanceTemplateReference": {
-                    "@odata.type": "#microsoft.graph.deviceManagementConfigurationSettingInstanceTemplateReference",
                     "settingInstanceTemplateId": "a3270f64-e493-499d-8900-90290f61ed8a"
                 },
                 "choiceSettingValue": {
-                    "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingValue",
                     "value": "device_vendor_msft_laps_policies_backupdirectory_1",
                     "settingValueTemplateReference": {
-                        "@odata.type": "#microsoft.graph.deviceManagementConfigurationSettingValueTemplateReference",
                         "settingValueTemplateId": "4d90f03d-e14c-43c4-86da-681da96a2f92",
                         "useTemplateDefault": false
                     },
@@ -43,14 +39,11 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_laps_policies_postauthenticationactions",
                 "settingInstanceTemplateReference": {
-                    "@odata.type": "#microsoft.graph.deviceManagementConfigurationSettingInstanceTemplateReference",
                     "settingInstanceTemplateId": "d9282eb1-d187-42ae-b366-7081f32dcfff"
                 },
                 "choiceSettingValue": {
-                    "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingValue",
                     "value": "device_vendor_msft_laps_policies_postauthenticationactions_3",
                     "settingValueTemplateReference": {
-                        "@odata.type": "#microsoft.graph.deviceManagementConfigurationSettingValueTemplateReference",
                         "settingValueTemplateId": "68ff4f78-baa8-4b32-bf3d-5ad5566d8142",
                         "useTemplateDefault": false
                     },
