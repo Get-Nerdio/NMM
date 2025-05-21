@@ -8,7 +8,7 @@
             "includeUserActions": []
         },
         "users": {
-            "includeUsers": ["None"],
+            "includeUsers": ["GuestsOrExternalUsers"],
             "excludeUsers": [],
             "includeGroups": [],
             "excludeGroups": [],
