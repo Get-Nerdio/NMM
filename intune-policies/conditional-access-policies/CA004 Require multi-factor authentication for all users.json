@@ -8,7 +8,7 @@
             "includeUserActions": []
         },
         "users": {
-            "includeUsers": ["All"],
+            "includeUsers": ["None"],
             "excludeUsers": [],
             "includeGroups": [],
             "excludeGroups": [],
