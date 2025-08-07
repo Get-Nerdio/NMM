@@ -1,4 +1,4 @@
-#description: Install Axcient x360 Agent. TokenID needs to be a Secure Variable.
+#description: Install Axcient x360 Agent. TokenID needs to be a Inherited Variable 'x360RecoverTokenID'.
 #tags: Nerdio, Apps install
 
 <#
@@ -14,7 +14,10 @@ $destinationFolder = Join-Path $env:TEMP "Axcient\x360Recover"
 $destinationPath = Join-Path $destinationFolder "AgentInstaller.msi"
 $logFile = Join-Path $destinationFolder "Installation-script.log"
 $logMSIFile = Join-Path $destinationFolder "Installation-script.msi.log"
-$tokenID = $SecureVars.x360RecoverTokenID
+$tokenID = $InheritedVars.x360RecoverTokenID
+if (-not $tokenID) {
+    $tokenID = $SecureVars.x360RecoverTokenID
+}
 
 if (-not (Test-Path $destinationFolder)) {
     New-Item -ItemType Directory -Path $destinationFolder | Out-Null
