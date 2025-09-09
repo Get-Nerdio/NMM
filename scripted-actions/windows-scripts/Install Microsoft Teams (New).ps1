@@ -28,6 +28,7 @@
 $WebView2InstallerUrl = "https://go.microsoft.com/fwlink/p/?LinkId=2124703"
 $DLink = "https://go.microsoft.com/fwlink/?linkid=2243204&clcid=0x409"
 $MarchwebRTC = $false
+$ErrorActionPreference = 'Stop'
 
 # Minimal binary validation: ensure file starts with EXE 'MZ' or MSI CFBF header
 function Test-Binary([string]$Path) {
@@ -89,14 +90,18 @@ function Get-WebView2InstallerX64 {
         -Headers $ua -UseBasicParsing -TimeoutSec 120 -ErrorAction Stop
             $rx = 'https[^"\\'']+WebView2RuntimeInstallerX64\.exe'
             $m  = [regex]::Match($page.Content, $rx)
-            if (-not $m.Success) { Fail "Cannot locate the Standalone x64 WebView2 installer link." }
+            if (-not $m.Success) {
+                NMMLogOutput -Level 'Warning' -Message "Cannot locate the Standalone x64 WebView2 installer link." -throw $true 
+            }
             $standaloneUrl = $m.Value
             Invoke-WebRequest -Uri $standaloneUrl -OutFile $OutPath -MaximumRedirection 10 `
         -Headers $ua -UseBasicParsing -TimeoutSec 300 -ErrorAction Stop
-            if (-not (Test-Binary $OutPath)) { Fail "Downloaded WebView2 file is not a valid EXE/MSI: $OutPath" }
+            if (-not (Test-Binary $OutPath)) {
+                NMMLogOutput -Level 'Warning' -Message "Downloaded WebView2 file is not a valid EXE/MSI: $OutPath" -throw $true 
+            }
             return $OutPath
         } catch {
-            Fail ("WebView2 download failed: " + $_.Exception.Message)
+            NMMLogOutput -Level 'Warning' -Message "WebView2 download failed: $($_.Exception.Message)" -throw $true
         }
     }
 }
@@ -140,26 +145,26 @@ function NMMLogOutput {
 
     try {
         Add-Content -Path "$($LogFilePath)\$($LogName)" -Value $logEntry
-
-        if ($throw) {
-            throw $Message
-        }
-
-        if ($return) {
-            return $Message
-        }
-
-        if ($exit) {
-            Write-Output "$($Message)"
-            exit
-        }
-
-        if ($WriteOutput) {
-            Write-Output "$($Message)"
-        }
     }
     catch {
         Write-Error $_.Exception.Message
+        if ($throw) {
+            throw $_.Exception.Message
+        }
+    }
+    
+    if ($throw) {
+        Write-Error $Message
+        throw $Message
+    }
+
+    if ($return) {
+        return $Message
+    }
+
+    if ($exit) {
+        Write-Output $Message
+        exit
     }
 }
 
@@ -253,66 +258,7 @@ try {
     # Installing MS Teams
     $proc = Start-Process 'C:\Windows\Temp\msteams_sa\install\teamsbootstrapper.exe' -ArgumentList '-p' -Wait -PassThru 2>&1
     if ($proc.ExitCode -ne 0) {
-        Fail ("Teams bootstrapper failed with exit code: " + $proc.ExitCode)
-    }
-    
-    # Installing MS Teams Meeting Add-in for Outlook (machine-wide)
-    try {
-        # Ensure we are elevated (SYSTEM in Scripted Action is admin)
-        if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator') ){
-            NMMLogOutput -Level 'Warning' -Message "Add-in install skipped: not running as administrator." -return $true
-        } else {
-            # Path to embedded MSI inside WindowsApps (x64)
-            $TMAPath = Find-TMAInstallerPath -TimeoutSec 600
-            if (-not $TMAPath) {
-                NMMLogOutput -Level 'Warning' -Message "Add-in install skipped: TMAInstaller (MSTeams) not found." -return $true
-            } else {
-                # Get new Teams package version (AllUsers)
-                $NewTeamsPackage = Get-AppxPackage -Name MSTeams -AllUsers | Select-Object -First 1
-                if ($NewTeamsPackage)
-                {
-                    $NewTeamsPackageVersion = $NewTeamsPackage.Version
-                    NMMLogOutput -Level 'Information' -Message ("Detected new Teams package version: " + $NewTeamsPackageVersion) -return $true
-                } else {
-                    NMMLogOutput -Level 'Warning' -Message "New Teams package version does not detected." -return $true
-                }
-                
-                if (-not (Test-Path $TMAPath)) {
-                    NMMLogOutput -Level 'Warning' -Message ("Add-in MSI not found at " + $TMAPath) -return $true
-                } else {
-                    # Get add-in binary version from MSI (used for TARGETDIR)
-                    $publisher = Get-AppLockerFileInformation -Path $TMAPath | Select-Object -ExpandProperty Publisher -ErrorAction SilentlyContinue
-                    $TMAVersion = $null
-                    if ($publisher -and $publisher.BinaryVersion) {
-                        $TMAVersion = $publisher.BinaryVersion
-                    } else {
-                        # Fallback: read ProductVersion via registry later; install to default path without version subfolder
-                        NMMLogOutput -Level 'Warning' -Message "Could not resolve add-in BinaryVersion; will install to default path without version subfolder." -return $true
-                    }
-
-                    # Microsoft updated recommended path from TeamsMeetingAddin -> TeamsMeetingAdd-in (with hyphen)
-                    if ($TMAVersion) {
-                        $TargetDir = ("{0}\Microsoft\TeamsMeetingAdd-in\{1}\" -f ${env:ProgramFiles(x86)}, $TMAVersion)
-                    } else {
-                        $TargetDir = ("{0}\Microsoft\TeamsMeetingAdd-in\" -f ${env:ProgramFiles(x86)})
-                    }
-
-                    # Build msiexec parameters
-                    $params = '/i "{0}" TARGETDIR="{1}" ALLUSERS=1 /qn /norestart' -f $TMAPath, $TargetDir
-                    NMMLogOutput -Level 'Information' -Message ("Executing msiexec.exe " + $params) -return $true
-
-                    $proc = Start-Process -FilePath msiexec.exe -ArgumentList $params -Wait -PassThru
-                    if ($proc.ExitCode -ne 0) {
-                        Fail ("Teams Meeting Add-in MSI failed with exit code: " + $proc.ExitCode)
-                    } else {
-                        NMMLogOutput -Level 'Information' -Message "Teams Meeting Add-in installed successfully (machine-wide)." -return $true
-                    }
-                }
-            }
-        }
-    }
-    catch {
-        NMMLogOutput -Level 'Warning' -Message ("Teams Meeting Add-in install exception: " + $_.Exception.Message) -return $true
+        NMMLogOutput -Level 'Warning' -Message "Teams bootstrapper failed with exit code: $($proc.ExitCode)" -throw $true
     }
     
     # Set registry values for Teams to use VDI optimization
@@ -328,12 +274,70 @@ catch {
     NMMLogOutput -Level 'Warning' -Message "Teams installation failed with exception $($_.exception.message)" -throw $true
 }
 
+# Installing MS Teams Meeting Add-in for Outlook (machine-wide)
+try {
+    # Ensure we are elevated (SYSTEM in Scripted Action is admin)
+    if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator') ){
+        NMMLogOutput -Level 'Warning' -Message "Add-in install skipped: not running as administrator." -return $true
+    } else {
+        # Path to embedded MSI inside WindowsApps (x64)
+        $TMAPath = Find-TMAInstallerPath -TimeoutSec 600
+        if (-not $TMAPath) {
+            NMMLogOutput -Level 'Warning' -Message "Add-in install skipped: TMAInstaller (MSTeams) not found." -return $true
+        } else {
+            # Get new Teams package version (AllUsers)
+            $NewTeamsPackage = Get-AppxPackage -Name MSTeams -AllUsers | Select-Object -First 1
+            if ($NewTeamsPackage)
+            {
+                $NewTeamsPackageVersion = $NewTeamsPackage.Version
+                NMMLogOutput -Level 'Information' -Message ("Detected new Teams package version: " + $NewTeamsPackageVersion) -return $true
+            } else {
+                NMMLogOutput -Level 'Warning' -Message "New Teams package version does not detected." -throw $true
+            }
+
+            if (-not (Test-Path $TMAPath)) {
+                NMMLogOutput -Level 'Warning' -Message ("Add-in MSI not found at " + $TMAPath) -return $true
+            } else {
+                # Get add-in binary version from MSI (used for TARGETDIR)
+                $publisher = Get-AppLockerFileInformation -Path $TMAPath | Select-Object -ExpandProperty Publisher -ErrorAction SilentlyContinue
+                $TMAVersion = $null
+                if ($publisher -and $publisher.BinaryVersion) {
+                    $TMAVersion = $publisher.BinaryVersion
+                } else {
+                    # Fallback: read ProductVersion via registry later; install to default path without version subfolder
+                    NMMLogOutput -Level 'Warning' -Message "Could not resolve add-in BinaryVersion; will install to default path without version subfolder." -return $true
+                }
+
+                # Microsoft updated recommended path from TeamsMeetingAddin -> TeamsMeetingAdd-in (with hyphen)
+                if ($TMAVersion) {
+                    $TargetDir = ("{0}\Microsoft\TeamsMeetingAdd-in\{1}\" -f ${env:ProgramFiles(x86)}, $TMAVersion)
+                } else {
+                    $TargetDir = ("{0}\Microsoft\TeamsMeetingAdd-in\" -f ${env:ProgramFiles(x86)})
+                }
+
+                # Build msiexec parameters
+                $params = '/i "{0}" TARGETDIR="{1}" ALLUSERS=1 /qn /norestart' -f $TMAPath, $TargetDir
+                NMMLogOutput -Level 'Information' -Message ("Executing msiexec.exe " + $params) -return $true
+
+                $proc = Start-Process -FilePath msiexec.exe -ArgumentList $params -Wait -PassThru
+                if ($proc.ExitCode -ne 0) {
+                    NMMLogOutput -Level 'Warning' -Message "Teams Meeting Add-in MSI failed with exit code: $($proc.ExitCode)" -throw $true
+                } else {
+                    NMMLogOutput -Level 'Information' -Message "Teams Meeting Add-in installed successfully (machine-wide)." -return $true
+                }
+            }
+        }
+    }
+}
+catch {
+    NMMLogOutput -Level 'Warning' -Message ("Teams Meeting Add-in install exception: " + $_.Exception.Message) -return $true
+}
+
 <#
 #Use MS shortcut to WebRTC install
 Temporarily adding a fixed version of WebRTC with the March 2024 release.
 To roll-back to the latest, set $MarchwebRTC to $false in the script parameters.
 #>
-
 try {
 
     switch ($MarchwebRTC) {
