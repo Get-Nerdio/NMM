@@ -25,7 +25,6 @@
 #>
 
 # Define script variables
-$WebView2InstallerUrl = "https://go.microsoft.com/fwlink/p/?LinkId=2124703"
 $DLink = "https://go.microsoft.com/fwlink/?linkid=2243204&clcid=0x409"
 $MarchwebRTC = $false
 $ErrorActionPreference = 'Stop'
