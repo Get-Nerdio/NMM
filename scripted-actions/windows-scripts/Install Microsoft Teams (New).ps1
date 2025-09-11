@@ -23,7 +23,6 @@
     - Ensure that the script is run with appropriate privileges for registry modifications and software installation.
 
 #>
-
 # Define script variables
 $DLink = "https://go.microsoft.com/fwlink/?linkid=2243204&clcid=0x409"
 $MarchwebRTC = $false
