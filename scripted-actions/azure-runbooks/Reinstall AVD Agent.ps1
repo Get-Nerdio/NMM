@@ -76,9 +76,8 @@ $RegistrationToken = $RegistrationKey.token
 
 # String with helper function that ensures the AVD Agent installer exists at the expected path
 $EnsureFunc = @'
-function Ensure-AvdInstaller {
+function Download-AvdInstaller {
     param(
-        # Full target path to MSI (e.g. 'C:\Program Files\Microsoft RDInfra\Microsoft.RDInfra.RDAgent.Installer-x64.msi')
         [Parameter(Mandatory=$true)]
         [string]$ExpectedPath
     )
@@ -86,29 +85,12 @@ function Ensure-AvdInstaller {
     # Microsoft official endpoint for the latest AVD Agent installer
     $DownloadUrl = "https://query.prod.cms.rt.microsoft.com/cms/api/am/binary/RWrmXv"
 
-    Write-Output "[Ensure-AvdInstaller] Target path: $ExpectedPath"
-
-    # If file exists and is non-empty, just log and return control
-    if (Test-Path $ExpectedPath) {
-        try {
-            $len = (Get-Item $ExpectedPath).Length
-            if ($len -gt 0) {
-                Write-Output "[Ensure-AvdInstaller] Installer already present ($len bytes). Nothing to do."
-                return
-            } else {
-                Write-Output "[Ensure-AvdInstaller] Existing file is zero-length. Will re-download."
-            }
-        } catch {
-            Write-Output "[Ensure-AvdInstaller] Exception while checking file: $($_.Exception.Message)"
-        }
-    }
-
-    Write-Output "[Ensure-AvdInstaller] Downloading installer from $DownloadUrl..."
+    Write-Output "[Download-AvdInstaller] Downloading installer from $DownloadUrl... to $ExpectedPath"
     try {
         Invoke-WebRequest -Uri $DownloadUrl -OutFile $ExpectedPath -UseBasicParsing
-        Write-Output "[Ensure-AvdInstaller] Download complete."
+        Write-Output "[Download-AvdInstaller] Download complete."
     } catch {
-        throw "[Ensure-AvdInstaller] Failed to download installer: $($_.Exception.Message)"
+        throw "[Download-AvdInstaller] Failed to download installer: $($_.Exception.Message)"
     }
 }
 '@
@@ -131,9 +113,8 @@ if (-not (Test-Path -Path `$wvdAppsLogsPath)) {
 if ([string]::IsNullOrWhiteSpace(`$AgentInstaller)) {
     `$AgentInstaller = "C:\Program Files\Microsoft RDInfra\Microsoft.RDInfra.RDAgent.Installer-x64.msi"
     Write-Output "[Reinstall] No installer found. Will download to: `$AgentInstaller"
+    Download-AvdInstaller -ExpectedPath `$AgentInstaller
 }
-Ensure-AvdInstaller -ExpectedPath `$AgentInstaller
-
 `$InstallerPath = '"' + `$AgentInstaller + '"'
 
 Write-Output "Installing RD Infra Agent on VM `$InstallerPath"
