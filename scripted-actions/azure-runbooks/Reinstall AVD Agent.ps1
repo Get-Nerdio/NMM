@@ -13,6 +13,8 @@ v1 (Fall 2019) Azure WVD.
 
 #>
 
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
 Write-output "Getting Host Pool Information"
 $HostPool = Get-AzResource -ResourceId $HostpoolID
 $HostPoolResourceGroupName = $HostPool.ResourceGroupName
