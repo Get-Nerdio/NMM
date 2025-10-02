@@ -13,6 +13,9 @@ v1 (Fall 2019) Azure WVD.
 
 #>
 
+$ErrorActionPreference = "Stop"
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
 Write-output "Getting Host Pool Information"
 $HostPool = Get-AzResource -ResourceId $HostpoolID
 $HostPoolResourceGroupName = $HostPool.ResourceGroupName
@@ -74,8 +77,28 @@ if (-not $RegistrationKey.Token) {
 
 $RegistrationToken = $RegistrationKey.token
 
+# String with helper function that ensures the AVD Agent installer exists at the expected path
+$EnsureFunc = @'
+function Download-AvdInstaller {
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$ExpectedPath
+    )
 
-$Script = @"
+    # Microsoft official endpoint for the latest AVD Agent installer
+    $DownloadUrl = "https://query.prod.cms.rt.microsoft.com/cms/api/am/binary/RWrmXv"
+
+    Write-Output "[Download-AvdInstaller] Downloading installer from $DownloadUrl... to $ExpectedPath"
+    try {
+        Invoke-WebRequest -Uri $DownloadUrl -OutFile $ExpectedPath -UseBasicParsing
+        Write-Output "[Download-AvdInstaller] Download complete."
+    } catch {
+        throw "[Download-AvdInstaller] Failed to download installer: $($_.Exception.Message)"
+    }
+}
+'@
+
+$Script = $EnsureFunc + @"
 `$tempFolder = [environment]::GetEnvironmentVariable('TEMP', 'Machine')
 `$logsFolderName = "NMWLogs"
 `$logsPath = "`$tempFolder\`$logsFolderName"
@@ -90,6 +113,11 @@ if (-not (Test-Path -Path `$wvdAppsLogsPath)) {
 }
 
 `$AgentInstaller = (Get-ChildItem 'C:\Program Files\Microsoft RDInfra\' | ? name -Match Microsoft.RDInfra.RDAgent.Installer | sort lastwritetime -Descending | select -First 1).fullname
+if ([string]::IsNullOrWhiteSpace(`$AgentInstaller)) {
+    `$AgentInstaller = "C:\Program Files\Microsoft RDInfra\Microsoft.RDInfra.RDAgent.Installer-x64.msi"
+    Write-Output "[Reinstall] No installer found. Will download to: `$AgentInstaller"
+    Download-AvdInstaller -ExpectedPath `$AgentInstaller
+}
 `$InstallerPath = '"' + `$AgentInstaller + '"'
 
 Write-Output "Installing RD Infra Agent on VM `$InstallerPath"
