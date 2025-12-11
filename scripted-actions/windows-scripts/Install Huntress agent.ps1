@@ -8,7 +8,7 @@ The installation script requires an account key and an organization key,
 which are used to associate the agent with a specific organization 
 within the Huntress partner account. 
 You must provide secure variables to this script as seen in the Required Variables section. 
-Set these up in Nerdio Manager under Settings->Portal. The variables to create are:
+Set these up in Nerdio Manager under Settings->Integrations. The variables to create are:
     HuntressAccountKey
     HuntressOrgKey
 #>
