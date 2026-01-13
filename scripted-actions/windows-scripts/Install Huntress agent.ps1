@@ -16,7 +16,7 @@ Set these up in Nerdio Manager under Settings->Integrations. The variables to cr
 ##### Required Variables #####
 
 $AccountKey = $SecureVars.HuntressAccountKey
-$OrganizationKey =  $SecureVars.HuntressOrgKey
+$OrganizationKey = $SecureVars.HuntressOrgKey
 
 ##### Script Logic #####
 
