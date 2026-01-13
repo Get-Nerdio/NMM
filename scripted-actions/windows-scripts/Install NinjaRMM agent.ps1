@@ -6,7 +6,7 @@
 Notes:
 The installation script requires an NinjaRMM agent download URL.
 You must provide secure variables to this script as seen in the Required Variables section. 
-Set these up in Nerdio Manager under Settings->Portal. The variables to create are:
+Set these up in Nerdio Manager under Settings->Integrations. The variables to create are:
     NinjaDownloadURL
 #>
 

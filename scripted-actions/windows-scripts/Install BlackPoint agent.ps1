@@ -7,7 +7,7 @@ Notes:
 The installation script requires an customer UID and an company name.
 You can get it from the SNAP Agent download URL. https://support.blackpointcyber.com/article/41-configuring-the-powershell-script
 You must provide secure variables to this script as seen in the Required Variables section. 
-Set these up in Nerdio Manager under Settings->Portal. The variables to create are:
+Set these up in Nerdio Manager under Settings->Integrations. The variables to create are:
     BPCustomerUID
     BPCompanyEXE
 #>

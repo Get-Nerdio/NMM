@@ -6,7 +6,7 @@
 Notes:
 The installation script requires the KcsSetup download URL. You can get it from the customer's unique URL under the link "Click here if Agent doesn't begin downloading automatically".
 You must provide secure variables to this script as seen in the Required Variables section. 
-Set these up in Nerdio Manager under Settings->Portal. The variables to create are:
+Set these up in Nerdio Manager under Settings->Integrations. The variables to create are:
     KaseyaDownloadURL
 #>
 

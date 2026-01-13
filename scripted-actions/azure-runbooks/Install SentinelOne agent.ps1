@@ -16,7 +16,7 @@ number" e.g. 21.7.5.1080)
 API Token.
 
 You must provide secure variables to this script as seen in the Required Variables section. 
-Set these up in Nerdio Manager under Settings->Portal. The variables to create are:
+Set these up in Nerdio Manager under Settings->Integrations. The variables to create are:
     S1AgentVersion
     S1SiteToken
     S1APItoken
