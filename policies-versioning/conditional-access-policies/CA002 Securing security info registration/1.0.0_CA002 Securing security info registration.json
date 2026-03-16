@@ -28,9 +28,7 @@
             "includeUsers": [
                 "All"
             ],
-            "excludeUsers": [
-                "GuestsOrExternalUsers"
-            ],
+            "excludeUsers": [],
             "includeGroups": [],
             "excludeGroups": [],
             "includeRoles": [],
@@ -38,7 +36,13 @@
                 "62e90394-69f5-4237-9190-012177145e10"
             ],
             "includeGuestsOrExternalUsers": null,
-            "excludeGuestsOrExternalUsers": null
+            "excludeGuestsOrExternalUsers": {
+                "guestOrExternalUserTypes": "internalGuest,b2bCollaborationGuest,b2bCollaborationMember,b2bDirectConnectUser,otherExternalUser,serviceProvider",
+                "externalTenants": {
+                    "@odata.type": "#microsoft.graph.conditionalAccessAllExternalTenants",
+                    "membershipKind": "all"
+                }
+            }
         },
         "locations": {
             "includeLocations": [

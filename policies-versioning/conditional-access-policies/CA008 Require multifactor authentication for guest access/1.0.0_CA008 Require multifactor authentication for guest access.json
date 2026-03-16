@@ -27,14 +27,20 @@
         },
         "users": {
             "includeUsers": [
-                "GuestsOrExternalUsers"
+                "None"
             ],
             "excludeUsers": [],
             "includeGroups": [],
             "excludeGroups": [],
             "includeRoles": [],
             "excludeRoles": [],
-            "includeGuestsOrExternalUsers": null,
+            "includeGuestsOrExternalUsers": {
+                "guestOrExternalUserTypes": "B2bCollaborationGuest,B2bCollaborationMember,B2bDirectConnectUser,InternalGuest,ServiceProvider,OtherExternalUser",
+                "externalTenants": {
+                    "membershipKind": "all",
+                    "@odata.type": "#microsoft.graph.conditionalAccessAllExternalTenants"
+                }
+            },
             "excludeGuestsOrExternalUsers": null
         }
     },
