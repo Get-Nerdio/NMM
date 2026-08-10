@@ -158,7 +158,7 @@
               "settingDefinitionId": "device_vendor_msft_policy_config_onedrivengscv2.updates~policy~onedrivengsc_kfmoptinnowizard_kfmoptinnowizard_textbox",
               "simpleSettingValue": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationStringSettingValue",
-                "value": "<Tenant ID>"
+                "value": "{$EnvironmentVars.TenantId}"
               },
               "auditRuleInformation": null
             }
