@@ -1,0 +1,53 @@
+{
+    "templateId": "0b2282f9-2862-4178-88b5-d79340b36cb8",
+    "displayName": "CA003: Block legacy authentication",
+    "state": "enabled",
+    "partialEnablementStrategy": null,
+    "sessionControls": null,
+    "conditions": {
+        "userRiskLevels": [],
+        "signInRiskLevels": [],
+        "clientAppTypes": [
+            "exchangeActiveSync",
+            "other"
+        ],
+        "platforms": null,
+        "locations": null,
+        "times": null,
+        "deviceStates": null,
+        "devices": null,
+        "clientApplications": null,
+        "applications": {
+            "includeApplications": [
+                "All"
+            ],
+            "excludeApplications": [],
+            "includeUserActions": [],
+            "includeAuthenticationContextClassReferences": [],
+            "applicationFilter": null,
+            "includeAgentActions": []
+        },
+        "users": {
+            "includeUsers": [
+                "All"
+            ],
+            "excludeUsers": [],
+            "includeGroups": [],
+            "excludeGroups": [],
+            "includeRoles": [],
+            "excludeRoles": [],
+            "includeGuestsOrExternalUsers": null,
+            "excludeGuestsOrExternalUsers": null
+        },
+        "agents": null
+    },
+    "grantControls": {
+        "operator": "OR",
+        "builtInControls": [
+            "block"
+        ],
+        "customAuthenticationFactors": [],
+        "termsOfUse": [],
+        "authenticationStrength": null
+    }
+}

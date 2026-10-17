@@ -7,6 +7,9 @@
   "versions": {
     "1.0.1": {
       "changeLog": "Updated to remain compatible with the latest Microsoft changes. No functional changes. Resolves the mismatch status."
+    },
+    "1.0.2": {
+      "changeLog": "Microsoft added a new default property to Conditional Access policies: conditions.applications.includeAgentActions (empty list). Added it to this policy so deployed policies no longer show a mismatch that Fix Drift cannot resolve. Policy behavior is unchanged."
     }
   }
 }

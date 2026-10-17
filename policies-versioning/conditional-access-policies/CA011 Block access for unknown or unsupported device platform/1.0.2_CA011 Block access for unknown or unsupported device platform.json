@@ -1,0 +1,64 @@
+{
+    "templateId": "4e39a309-931e-4cb1-a371-e2beea168002",
+    "displayName": "CA011: Block access for unknown or unsupported device platform",
+    "state": "enabled",
+    "partialEnablementStrategy": null,
+    "sessionControls": null,
+    "conditions": {
+        "userRiskLevels": [],
+        "signInRiskLevels": [],
+        "clientAppTypes": [
+            "all"
+        ],
+        "platforms": {
+            "includePlatforms": [
+                "all"
+            ],
+            "excludePlatforms": [
+                "android",
+                "iOS",
+                "windows",
+                "macOS",
+                "linux",
+                "windowsPhone"
+            ]
+        },
+        "locations": null,
+        "times": null,
+        "deviceStates": null,
+        "devices": null,
+        "clientApplications": null,
+        "applications": {
+            "includeApplications": [
+                "All"
+            ],
+            "excludeApplications": [],
+            "includeUserActions": [],
+            "includeAuthenticationContextClassReferences": [],
+            "applicationFilter": null,
+            "includeAgentActions": []
+        },
+        "users": {
+            "includeUsers": [
+                "All"
+            ],
+            "excludeUsers": [],
+            "includeGroups": [],
+            "excludeGroups": [],
+            "includeRoles": [],
+            "excludeRoles": [],
+            "includeGuestsOrExternalUsers": null,
+            "excludeGuestsOrExternalUsers": null
+        },
+        "agents": null
+    },
+    "grantControls": {
+        "operator": "OR",
+        "builtInControls": [
+            "block"
+        ],
+        "customAuthenticationFactors": [],
+        "termsOfUse": [],
+        "authenticationStrength": null
+    }
+}

@@ -1,0 +1,72 @@
+{
+    "templateId": "62e51ccc-c9c3-4554-ac70-066172c81007",
+    "displayName": "CA012: No persistent browser session",
+    "state": "enabled",
+    "grantControls": null,
+    "partialEnablementStrategy": null,
+    "conditions": {
+        "userRiskLevels": [],
+        "signInRiskLevels": [],
+        "clientAppTypes": [
+            "all"
+        ],
+        "platforms": null,
+        "locations": null,
+        "times": null,
+        "deviceStates": null,
+        "clientApplications": null,
+        "applications": {
+            "includeApplications": [
+                "All"
+            ],
+            "excludeApplications": [],
+            "includeUserActions": [],
+            "includeAuthenticationContextClassReferences": [],
+            "applicationFilter": null,
+            "includeAgentActions": []
+        },
+        "users": {
+            "includeUsers": [
+                "All"
+            ],
+            "excludeUsers": [],
+            "includeGroups": [],
+            "excludeGroups": [],
+            "includeRoles": [],
+            "excludeRoles": [],
+            "includeGuestsOrExternalUsers": null,
+            "excludeGuestsOrExternalUsers": null
+        },
+        "devices": {
+            "includeDeviceStates": [],
+            "excludeDeviceStates": [],
+            "includeDevices": [],
+            "excludeDevices": [],
+            "deviceFilter": {
+                "mode": "include",
+                "rule": "device.trustType -ne \"ServerAD\" -or device.isCompliant -ne True"
+            }
+        },
+        "agents": null
+    },
+    "sessionControls": {
+        "disableResilienceDefaults": null,
+        "applicationEnforcedRestrictions": null,
+        "cloudAppSecurity": null,
+        "continuousAccessEvaluation": null,
+        "secureSignInSession": null,
+        "signInFrequency": {
+            "value": 1,
+            "type": "hours",
+            "authenticationType": "primaryAndSecondaryAuthentication",
+            "frequencyInterval": "timeBased",
+            "isEnabled": true
+        },
+        "persistentBrowser": {
+            "mode": "never",
+            "isEnabled": true
+        },
+        "blockSensitiveActions": null,
+        "humanApproval": null
+    }
+}
