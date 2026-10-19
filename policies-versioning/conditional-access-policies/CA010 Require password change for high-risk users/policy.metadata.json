@@ -8,7 +8,7 @@
       "changeLog": "Updated to remain compatible with the latest Microsoft changes. No functional changes. Resolves the mismatch status."
     },
     "1.0.2": {
-      "changeLog": "Microsoft added new default properties to Conditional Access policies: conditions.applications.includeAgentActions (empty list) and sessionControls.humanApproval (not configured). Added them to this policy so deployed policies no longer show a mismatch that Fix Drift cannot resolve. Policy behavior is unchanged."
+      "changeLog": "Microsoft added new default properties to Conditional Access policies: conditions.applications.includeAgentActions (empty list) and sessionControls.humanApproval (not configured). Added them to this policy so deployed policies no longer show a mismatch that Fix Drift cannot resolve. Policy behavior is unchanged. Renamed the policy from \"CA010: Require password change for high-risk users\" to \"CA010: Require remediation for high-risk users\" to follow Microsoft's updated naming for the user risk remediation policy. Grant controls are unchanged."
     }
   }
 }
