@@ -1,0 +1,71 @@
+{
+    "templateId": "6b619f55-792e-45dc-9711-d83ec9d7ae90",
+    "displayName": "CA009: Require multifactor authentication for risky sign-ins",
+    "state": "enabled",
+    "partialEnablementStrategy": null,
+    "conditions": {
+        "userRiskLevels": [],
+        "signInRiskLevels": [
+            "high",
+            "medium"
+        ],
+        "clientAppTypes": [
+            "all"
+        ],
+        "platforms": null,
+        "locations": null,
+        "times": null,
+        "deviceStates": null,
+        "devices": null,
+        "clientApplications": null,
+        "applications": {
+            "includeApplications": [
+                "All"
+            ],
+            "excludeApplications": [],
+            "includeUserActions": [],
+            "includeAuthenticationContextClassReferences": [],
+            "applicationFilter": null,
+            "includeAgentActions": []
+        },
+        "users": {
+            "includeUsers": [
+                "All"
+            ],
+            "excludeUsers": [],
+            "includeGroups": [],
+            "excludeGroups": [],
+            "includeRoles": [],
+            "excludeRoles": [],
+            "includeGuestsOrExternalUsers": null,
+            "excludeGuestsOrExternalUsers": null
+        },
+        "agents": null
+    },
+    "grantControls": {
+        "operator": "OR",
+        "builtInControls": [
+            "mfa"
+        ],
+        "customAuthenticationFactors": [],
+        "termsOfUse": [],
+        "authenticationStrength": null
+    },
+    "sessionControls": {
+        "disableResilienceDefaults": null,
+        "applicationEnforcedRestrictions": null,
+        "cloudAppSecurity": null,
+        "persistentBrowser": null,
+        "continuousAccessEvaluation": null,
+        "secureSignInSession": null,
+        "signInFrequency": {
+            "value": null,
+            "type": null,
+            "authenticationType": "primaryAndSecondaryAuthentication",
+            "frequencyInterval": "everyTime",
+            "isEnabled": true
+        },
+        "blockSensitiveActions": null,
+        "humanApproval": null
+    }
+}
