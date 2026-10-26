@@ -1,11 +1,11 @@
-﻿<#
-Name:        Distrust eMudhra compromised intermediate CAs (CVE-2026-111943)
-Description: Adds the 16 compromised eMudhra / emSign intermediate CA certificates
+#description: Adds the 16 compromised eMudhra / emSign intermediate CA certificates
              (8 keys: 6 TLS + 2 code-signing, each as the eMudhra-issued certificate
              and as the Sectigo "AAA Certificate Services" cross-signed certificate)
              to the machine's Untrusted Certificates (Disallowed) store, so Windows
              rejects any chain containing them (TLS, Authenticode, S/MIME).
-
+#execution mode: Individual
+#name:        Distrust eMudhra compromised intermediate CAs (CVE-2026-111943)
+<#
 Important:
   * This is defense-in-depth for the Windows system trust store ONLY. Windows already
     blocks these certificates through Microsoft's auto-updated disallowed-certificate
