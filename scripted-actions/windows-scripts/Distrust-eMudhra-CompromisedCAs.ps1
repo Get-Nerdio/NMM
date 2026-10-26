@@ -1,7 +1,7 @@
 #description: Adds the 16 compromised eMudhra / emSign intermediate CA certificates to the machine's Untrusted Certificates (Disallowed) store
-             (8 keys: 6 TLS + 2 code-signing, each as the eMudhra-issued certificate
-             and as the Sectigo "AAA Certificate Services" cross-signed certificate), so Windows
-             rejects any chain containing them (TLS, Authenticode, S/MIME).
+#             (8 keys: 6 TLS + 2 code-signing, each as the eMudhra-issued certificate
+#             and as the Sectigo "AAA Certificate Services" cross-signed certificate), so Windows
+#             rejects any chain containing them (TLS, Authenticode, S/MIME).
 #tags: Nerdio, eMudhra
 #execution mode: Individual
 #name:        Distrust eMudhra compromised intermediate CAs (CVE-2026-111943)
