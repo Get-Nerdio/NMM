@@ -1,0 +1,58 @@
+{
+    "templateId": "a4072ac0-722b-4991-981b-7f9755daef14",
+    "displayName": "CA008: Require multifactor authentication for guest access",
+    "state": "enabled",
+    "partialEnablementStrategy": null,
+    "sessionControls": null,
+    "conditions": {
+        "userRiskLevels": [],
+        "signInRiskLevels": [],
+        "clientAppTypes": [
+            "all"
+        ],
+        "platforms": null,
+        "locations": null,
+        "times": null,
+        "deviceStates": null,
+        "devices": null,
+        "clientApplications": null,
+        "applications": {
+            "includeApplications": [
+                "All"
+            ],
+            "excludeApplications": [],
+            "includeUserActions": [],
+            "includeAuthenticationContextClassReferences": [],
+            "applicationFilter": null,
+            "includeAgentActions": []
+        },
+        "users": {
+            "includeUsers": [
+                "None"
+            ],
+            "excludeUsers": [],
+            "includeGroups": [],
+            "excludeGroups": [],
+            "includeRoles": [],
+            "excludeRoles": [],
+            "includeGuestsOrExternalUsers": {
+                "guestOrExternalUserTypes": "B2bCollaborationGuest,B2bCollaborationMember,B2bDirectConnectUser,InternalGuest,ServiceProvider,OtherExternalUser",
+                "externalTenants": {
+                    "membershipKind": "all",
+                    "@odata.type": "#microsoft.graph.conditionalAccessAllExternalTenants"
+                }
+            },
+            "excludeGuestsOrExternalUsers": null
+        },
+        "agents": null
+    },
+    "grantControls": {
+        "operator": "OR",
+        "builtInControls": [
+            "mfa"
+        ],
+        "customAuthenticationFactors": [],
+        "termsOfUse": [],
+        "authenticationStrength": null
+    }
+}
