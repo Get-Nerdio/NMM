@@ -10,7 +10,8 @@
     2. Verifies the file is validly signed by Microsoft
     3. Optionally removes the existing provisioned version (-x)
     4. Provisions the latest Teams (-p), plus the Teams Meeting Add-in (--installTMA)
-    5. Cleans up the installer and writes a transcript log
+    5. Configures Teams automatic updates for VDI
+    6. Cleans up the installer and writes a transcript log
 
     Ref: https://learn.microsoft.com/en-us/microsoftteams/new-teams-vdi-requirements-deploy#new-teams-and-outlook-integration
 
@@ -22,13 +23,14 @@
 #>
 
 #region CONFIG - edit these values
-$DownloadUrl      = 'https://go.microsoft.com/fwlink/?linkid=2243204&clcid=0x409'
-$WorkingDirectory = if ($PSScriptRoot) { $PSScriptRoot } else { $env:TEMP }
-$LogPath          = Join-Path $env:TEMP 'Install-NewTeams.log'
-$MaxRetries       = 3
-$RemoveExisting   = $false   # $true = run "teamsbootstrapper.exe -x" before provisioning
-$SkipTMA          = $false   # $true = do not pass --installTMA (skips Outlook meeting add-in)
-$KeepInstaller    = $false   # $true = leave teamsbootstrapper.exe on disk after the run
+$DownloadUrl       = 'https://go.microsoft.com/fwlink/?linkid=2243204&clcid=0x409'
+$WorkingDirectory  = if ($PSScriptRoot) { $PSScriptRoot } else { $env:TEMP }
+$LogPath           = Join-Path $env:TEMP 'Install-NewTeams.log'
+$MaxRetries        = 3
+$RemoveExisting    = $false   # $true = run "teamsbootstrapper.exe -x" before provisioning
+$SkipTMA           = $false   # $true = do not pass --installTMA (skips Outlook meeting add-in)
+$DisableAutoUpdate = $true    # $true = disable Teams auto-updates in VDI; $false = allow them
+$KeepInstaller     = $false   # $true = leave teamsbootstrapper.exe on disk after the run
 #endregion CONFIG
 
 Set-StrictMode -Version Latest
@@ -118,17 +120,22 @@ function Invoke-Bootstrapper {
 
 function Set-WvdRegistryKey {
     $keyPath = 'HKLM:\SOFTWARE\Microsoft\Teams'
-    Write-Log 'Configuring Teams registry key for WVD...'
+    Write-Log 'Configuring Teams registry settings for WVD...'
     try {
         if (-not (Test-Path -LiteralPath $keyPath)) {
             New-Item -Path $keyPath -Force | Out-Null
         }
         New-ItemProperty -Path $keyPath -Name 'IsWVDEnvironment' -PropertyType DWord -Value 1 -Force | Out-Null
         Write-Log 'Registry key set: HKLM\SOFTWARE\Microsoft\Teams\IsWVDEnvironment = 1' 'OK'
+
+        $disableAutoUpdateValue = if ($DisableAutoUpdate) { 1 } else { 0 }
+        New-ItemProperty -Path $keyPath -Name 'disableAutoUpdate' -PropertyType DWord -Value $disableAutoUpdateValue -Force | Out-Null
+        $updateStatus = if ($DisableAutoUpdate) { 'disabled' } else { 'enabled' }
+        Write-Log "Teams automatic updates $updateStatus (disableAutoUpdate = $disableAutoUpdateValue)." 'OK'
     }
     catch {
         # Non-fatal: continue with the install, but make the failure visible
-        Write-Log "Failed to set Teams registry key. Error: $($_.Exception.Message)" 'WARN'
+        Write-Log "Failed to configure Teams registry settings. Error: $($_.Exception.Message)" 'WARN'
     }
 }
 #endregion Helpers
@@ -146,7 +153,7 @@ try {
     Get-Bootstrapper -Uri $DownloadUrl -Destination $InstallerPath -Retries $MaxRetries
     Test-MicrosoftSignature -Path $InstallerPath
 
-    # 2. Set WVD environment flag (before provisioning so Teams picks it up)
+    # 2. Set WVD environment flag and auto-update behavior before provisioning
     Set-WvdRegistryKey
 
     # 3. Optional removal of previous version
@@ -172,8 +179,8 @@ finally {
         Write-Log 'Removed downloaded installer.'
     }
 
-     $resultText = if ($ReturnCode -eq 0) { 'success' } else { 'failure - review the log above' }
-     Write-Log "RETURN CODE: $ReturnCode ($resultText)" $(if ($ReturnCode -eq 0) { 'OK' } else { 'ERROR' })
+    $resultText = if ($ReturnCode -eq 0) { 'success' } else { 'failure - review the log above' }
+    Write-Log "RETURN CODE: $ReturnCode ($resultText)" $(if ($ReturnCode -eq 0) { 'OK' } else { 'ERROR' })
 
     try { Stop-Transcript | Out-Null } catch { }
 }
