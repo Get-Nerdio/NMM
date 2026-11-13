@@ -171,11 +171,12 @@ finally {
         Remove-Item -LiteralPath $InstallerPath -Force -ErrorAction SilentlyContinue
         Write-Log 'Removed downloaded installer.'
     }
+
+     $resultText = if ($ReturnCode -eq 0) { 'success' } else { 'failure - review the log above' }
+     Write-Log "RETURN CODE: $ReturnCode ($resultText)" $(if ($ReturnCode -eq 0) { 'OK' } else { 'ERROR' })
+
     try { Stop-Transcript | Out-Null } catch { }
 }
 
-# Return code: 0 = success, 1 = failure (see log above / transcript).
-# Printed explicitly so it is visible in Nerdio's "Script output", then returned to the caller.
-$resultText = if ($ReturnCode -eq 0) { 'success' } else { 'failure - review the log above' }
-Write-Log "RETURN CODE: $ReturnCode ($resultText)" $(if ($ReturnCode -eq 0) { 'OK' } else { 'ERROR' })
-return $ReturnCode
+# Exit with 0 on success or 1 on failure
+exit $ReturnCode
