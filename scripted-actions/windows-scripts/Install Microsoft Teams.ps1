@@ -120,7 +120,9 @@ function Set-WvdRegistryKey {
     $keyPath = 'HKLM:\SOFTWARE\Microsoft\Teams'
     Write-Log 'Configuring Teams registry key for WVD...'
     try {
-        New-Item -Path $keyPath -Force | Out-Null
+        if (-not (Test-Path -LiteralPath $keyPath)) {
++            New-Item -Path $keyPath -Force | Out-Null
++       }
         New-ItemProperty -Path $keyPath -Name 'IsWVDEnvironment' -PropertyType DWord -Value 1 -Force | Out-Null
         Write-Log 'Registry key set: HKLM\SOFTWARE\Microsoft\Teams\IsWVDEnvironment = 1' 'OK'
     }
