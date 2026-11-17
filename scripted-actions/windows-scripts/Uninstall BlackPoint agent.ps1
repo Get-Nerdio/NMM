@@ -74,5 +74,8 @@ if (-not $module) {
 # Import the module
 Import-Module Remove-SnapAgent
 
-# Run the cleanup
+Write-Log "Run the cleanup..."
 Remove-SnapAgent
+
+Write-Log "Uninstalling Remove-SnapAgent module..."
+Uninstall-Module Remove-SnapAgent
