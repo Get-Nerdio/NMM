@@ -3,7 +3,7 @@
 #tags: Nerdio, BlackPoint
 <#
 Notes:
-This script uninstall BlackPoint agent
+This script uninstalls the Blackpoint agent. A system reboot is recommended after execution to complete removal of services or files that may be locked.
 
 Requirements
 - PowerShell 5.1 or later
@@ -37,7 +37,7 @@ try {
     Write-Output "Run the cleanup..."
     Remove-SnapAgent
 } catch {
-    Write-Output -Error "Failed to cleanup: $_"
+    Write-Output "ERROR: Failed to complete the cleanup: $_"
 }
 
 Write-Output "Uninstalling Remove-SnapAgent module..."
