@@ -33,8 +33,12 @@ if (-not $module) {
 # Import the module
 Import-Module Remove-SnapAgent
 
-Write-Output "Run the cleanup..."
-Remove-SnapAgent
+try {
+    Write-Output "Run the cleanup..."
+    Remove-SnapAgent
+} catch {
+    Write-Output -Error "Failed to cleanup: $_"
+}
 
 Write-Output "Uninstalling Remove-SnapAgent module..."
 Uninstall-Module Remove-SnapAgent
