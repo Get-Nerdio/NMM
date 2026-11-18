@@ -3,49 +3,42 @@
 #tags: Nerdio, BlackPoint
 <#
 Notes:
-This script uninstall BlackPoint agent
+This script uninstalls the Blackpoint agent. A system reboot is recommended after execution to complete removal of services or files that may be locked.
+
+Requirements
+- PowerShell 5.1 or later
+- Administrator privileges
+- Windows operating system
 #>
 
-##### Script Logic #####
-$Path32 = "C:\Program Files (x86)\Blackpoint"
-$Path64 = "C:\Program Files\Blackpoint"
-
-$UninstallString = (Get-ChildItem -path HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall | Get-ItemProperty |Where-Object {$_.DisplayName -match "SnapAgent" }).UninstallString 
-
-if($UninstallString -eq $null) {
-    $UninstallString = (Get-ChildItem -path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Uninstall | Get-ItemProperty |Where-Object {$_.DisplayName -match "SnapAgent" }).UninstallString 
+Write-Output "Installing NuGet package provider"
+try {
+    Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -Confirm:$false -ErrorAction Stop | Out-Null
+    Write-Output "NuGet package provider installed successfully"
+} catch {
+    Write-Output -Error "Failed to install NuGet: $_"
+    throw
 }
 
-if($UninstallString -eq $null) {
-    Write-Output "ERROR: Datto agent not found"
+Write-Output "Ensure Remove-SnapAgent is installed"
+$module = Get-Module -ListAvailable -Name Remove-SnapAgent
+if (-not $module) {
+    Write-Output "Installing Remove-SnapAgent module..."
+    Install-Module -Name Remove-SnapAgent -Force
+    Write-Output "Remove-SnapAgent module installed successfully"
+} else {
+    Write-Output "Remove-SnapAgent module is already installed"
 }
 
-else {
+# Import the module
+Import-Module Remove-SnapAgent
 
-    $SnapAgentProcess = Get-Process -Name "SnapAgent" -ErrorAction SilentlyContinue 
-    $SnapWProcess = Get-Process -Name "snapw" -ErrorAction SilentlyContinue 
-
-    if($SnapAgentProcess -ne $null) {
-        $SnapAgentProcess | Stop-Process -Force
-        Start-Sleep -Seconds 10 
-    }
-
-    if($SnapWProcess -ne $null) {
-        $SnapWProcess | Stop-Process -Force
-        Start-Sleep -Seconds 10 
-    }
-
-    $UninstallOption = $UninstallString -Replace "msiexec.exe","" -Replace "/I","" -Replace "/X",""
-
-    Start-Process "msiexec.exe" -arg "/X $UninstallOption /quiet" -Wait
-    
-    Start-Sleep -Seconds 60
-
-    if (Test-Path $Path32) {
-        Remove-Item -LiteralPath $Path32 -Force -Recurse 
-    }
-
-    if (Test-Path $Path64) {
-        Remove-Item -LiteralPath $Path64 -Force -Recurse 
-    }
+try {
+    Write-Output "Run the cleanup..."
+    Remove-SnapAgent
+} catch {
+    Write-Output "ERROR: Failed to complete the cleanup: $_"
 }
+
+Write-Output "Uninstalling Remove-SnapAgent module..."
+Uninstall-Module Remove-SnapAgent

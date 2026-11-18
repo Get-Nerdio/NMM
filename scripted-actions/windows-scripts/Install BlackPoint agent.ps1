@@ -4,39 +4,83 @@
 
 <#
 Notes:
-The installation script requires an customer UID and an company name.
-You can get it from the SNAP Agent download URL. https://support.blackpointcyber.com/article/41-configuring-the-powershell-script
-You must provide secure variables to this script as seen in the Required Variables section. 
-Set these up in Nerdio Manager under Settings->Integrations. The variables to create are:
-    BPCustomerUID
-    BPCompanyEXE
+This one-time provisioning script installs the Blackpoint unified Windows agent.
+Configure these secure variables in Nerdio Manager under Settings->Integrations:
+    BPCustomerID - the customer-specific Blackpoint customer ID.
+    BPAuthToken - the environment-wide authentication token shared across customers.
+Replace the legacy BPCustomerUID and BPCompanyEXE configuration with these two
+variables, using the unified-agent customer ID and token supplied by Blackpoint.
+Do not put credentials in this script.
+Only exit code 0 is treated as success; other codes fail without an automatic reboot.
 #>
 
 ##### Required Variables #####
 
-$CustomerUID = $SecureVars.BPCustomerUID
-$CompanyEXE =  $SecureVars.BPCompanyEXE
-
+$CustomerID = [string]$SecureVars.BPCustomerID
+$AuthToken = [string]$SecureVars.BPAuthToken
 
 ##### Script Logic #####
 
-if(($CustomerUID -eq $null) -or ($CompanyEXE -eq $null)) {
-    Write-Output "ERROR: The secure variables BPCustomerUID and BPCompanyEXE are not provided"
+foreach ($VariableName in @('BPCustomerID', 'BPAuthToken')) {
+    $Value = if ($VariableName -eq 'BPCustomerID') { $CustomerID } else { $AuthToken }
+    if ([string]::IsNullOrWhiteSpace($Value)) {
+        Write-Output "ERROR: Secure variable $VariableName is missing, empty, or whitespace-only."
+        exit 1
+    }
+    if ($Value -match '["\p{Cc}\u2028\u2029]') {
+        Write-Output "ERROR: Secure variable $VariableName must not contain double quotes, newlines, or control characters."
+        exit 1
+    }
 }
 
-else {
-    If (! (Get-ItemProperty "HKLM:SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full").Release -gt 394254)
-    { 
-        Write-Output "BlackPoint agent needs 4.6.1+ of .NET" 
-        exit 0
-    }
+$ExitCode = 1
+$TemporaryDirectory = $null
+$OriginalSecurityProtocol = [Net.ServicePointManager]::SecurityProtocol
+$Stage = 'preparing the installer'
 
-    $InstallerName = "snap_installer.exe"
-    $InstallerPath = Join-Path $Env:TMP $InstallerName
-    $DownloadURL = "https://portal.blackpointcyber.com/installer/$CustomerUID/$CompanyEXE"
+try {
+    $EncodedCustomerID = [Uri]::EscapeDataString($CustomerID)
+    $DownloadURL = "https://agent-sega-production-snap.bpcyber.net/v1/installers?customerId=$EncodedCustomerID&installer=exe&operatingSystem=windows"
+    $TemporaryDirectory = Join-Path ([IO.Path]::GetTempPath()) ("Blackpoint-" + [Guid]::NewGuid().ToString('N'))
+    New-Item -ItemType Directory -Path $TemporaryDirectory -ErrorAction Stop | Out-Null
+    $InstallerPath = Join-Path $TemporaryDirectory 'blackpoint-agent.exe'
 
+    $Stage = 'downloading the installer; check network access and BPCustomerID configuration'
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-    $WebClient = New-Object System.Net.WebClient
-    $WebClient.DownloadFile($DownloadURL, $InstallerPath)
-    Start-Process -NoNewWindow -FilePath $InstallerPath -ArgumentList "-y" -Wait
-} 
+    Invoke-WebRequest -Uri $DownloadURL -OutFile $InstallerPath -UseBasicParsing -ErrorAction Stop | Out-Null
+
+    # Double trailing backslashes so they cannot escape the closing command-line quote.
+    $QuotedCustomerID = $CustomerID -replace '(\\+)$', '$1$1'
+    $QuotedAuthToken = $AuthToken -replace '(\\+)$', '$1$1'
+    $InstallerArguments = 'CUSTOMER_ID="{0}" AUTH_TOKEN="{1}" /passive' -f $QuotedCustomerID, $QuotedAuthToken
+    $Stage = 'running the installer; verify BPCustomerID and BPAuthToken configuration and installation permissions'
+    $InstallerProcess = Start-Process -NoNewWindow -FilePath $InstallerPath -ArgumentList $InstallerArguments -Wait -PassThru -ErrorAction Stop
+    if ($InstallerProcess.ExitCode -eq 0) {
+        $ExitCode = 0
+    }
+    else {
+        Write-Output "ERROR: Blackpoint installer returned exit code $($InstallerProcess.ExitCode). Check Blackpoint installation diagnostics; no reboot was initiated."
+    }
+}
+catch {
+    Write-Output "ERROR: Blackpoint installation failed while $Stage. Exception details are suppressed to protect credentials."
+}
+finally {
+    [Net.ServicePointManager]::SecurityProtocol = $OriginalSecurityProtocol
+    if ($TemporaryDirectory) {
+        try {
+            if (Test-Path -LiteralPath $TemporaryDirectory -ErrorAction Stop) {
+                Remove-Item -LiteralPath $TemporaryDirectory -Recurse -Force -ErrorAction Stop
+            }
+        }
+        catch {
+            Write-Output 'ERROR: Could not remove the temporary Blackpoint installer directory. Remove leftover Blackpoint-* directories from the system temporary directory.'
+            $ExitCode = 1
+        }
+    }
+}
+
+if ($ExitCode -eq 0) {
+    Write-Output 'Blackpoint unified agent installation completed successfully.'
+}
+exit $ExitCode
