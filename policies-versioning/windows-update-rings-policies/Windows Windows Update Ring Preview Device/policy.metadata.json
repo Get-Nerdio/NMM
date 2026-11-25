@@ -5,6 +5,9 @@
   "versions": {
     "1.0.1": {
       "changeLog": "Updated to remain compatible with the latest Microsoft changes. No functional changes. Resolves the mismatch status."
+    },
+    "1.0.2": {
+      "changeLog": "Microsoft added new default properties to Windows Update Ring policies: deadlineGracePeriodForFeatureUpdatesInDays and deadlineGracePeriodForQualityUpdatesInDays (null), postponeRebootUntilAfterDeadlineForFeatureUpdates and postponeRebootUntilAfterDeadlineForQualityUpdates (notConfigured). Added them so deployed policies no longer show a mismatch. Policy behavior is unchanged."
     }
   }
 }

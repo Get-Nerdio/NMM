@@ -11,6 +11,9 @@
     },
     "1.0.2": {
       "changeLog": "Microsoft added a new default property to Conditional Access policies: conditions.applications.includeAgentActions (empty list). Added it to this policy so deployed policies no longer show a mismatch that Fix Drift cannot resolve. Policy behavior is unchanged."
+    },
+    "1.0.3": {
+      "changeLog": "Microsoft added new default properties to Conditional Access policies: conditions.actionsAndDestinations and conditions.users.userFilter (both null). Added them to this policy so deployed policies no longer show a mismatch that Fix Drift cannot resolve. Policy behavior is unchanged."
     }
   }
 }

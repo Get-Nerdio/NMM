@@ -9,6 +9,9 @@
     },
     "1.1.0": {
       "changeLog": "Microsoft added new default properties to Conditional Access policies: conditions.applications.includeAgentActions (empty list) and sessionControls.humanApproval (not configured). Added them to this policy so deployed policies no longer show a mismatch that Fix Drift cannot resolve. Renamed the policy from \"CA010: Require password change for high-risk users\" to \"CA010: Require risk remediation for high-risk users\" to follow Microsoft's updated naming for the user risk remediation policy. Grant controls updated to match Microsoft's \"Require risk remediation for high-risk users\" template: the \"Require multifactor authentication\" and \"Require password change\" controls are replaced by \"Require risk remediation\" (riskRemediation) with the built-in \"Multifactor authentication\" authentication strength. Sign-in frequency remains \"Every time\". Risk remediation is not supported for guest and external users."
+    },
+    "1.1.1": {
+      "changeLog": "Microsoft added new default properties to Conditional Access policies: conditions.actionsAndDestinations and conditions.users.userFilter (both null). Added them to this policy so deployed policies no longer show a mismatch that Fix Drift cannot resolve. Policy behavior is unchanged. Also completed grantControls.authenticationStrength with all properties of the built-in Multifactor authentication strength (same id) as returned by Microsoft Graph."
     }
   }
 }
